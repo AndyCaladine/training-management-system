@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}View Periodic Review{% endblock %}
+
+{% block content %}
+<h2>Periodic Review</h2>
+
+<div class="learning-form">
+    <div>
+        <label>Review Start Date</label>
+        <p>{{ review["review_start_date"] | format_date }}</p>
+    </div>
+
+    <div>
+        <label>Review End Date</label>
+        <p>{{ review["review_end_date"] | format_date }}</p>
+    </div>
+
+    <div>
+        <label>Student Reflection</label>
+        <p>{{ review["student_reflection"] or "-" }}</p>
+    </div>
+
+    <div>
+        <label>Achievements in the Last 6 Months</label>
+        <p>{{ review["achievements_last_period"] or "-" }}</p>
+    </div>
+
+    <div>
+        <label>Challenges in the Last 6 Months</label>
+        <p>{{ review["challenges_last_period"] or "-" }}</p>
+    </div>
+
+    <div>
+        <label>Goals for the Next 6 Months</label>
+        <p>{{ review["goals_next_period"] or "-" }}</p>
+    </div>
+
+    <div>
+        <label>Support Needed</label>
+        <p>{{ review["support_needed"] or "-" }}</p>
+    </div>
+
+    <div>
+        <label>Employer</label>
+        <p>{{ review["employer_name"] or "-" }}</p>
+    </div>
+
+    <div>
+        <label>Review Status</label>
+        <p>
+            <span class="status-badge {{ review['review_status'] }}">
+                {{ review["review_status"].replace("_", " ").title() }}
+            </span>
+        </p>
+    </div>
+
+    <div>
+        <label>Employer Feedback</label>
+        <p>{{ review["employer_feedback"] or "-" }}</p>
+    </div>
+
+    <a href="{{ url_for('student.student_dashboard') }}" class="button-link">Back to Dashboard</a>
+</div>
+{% endblock %}

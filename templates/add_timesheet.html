@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Add Timesheet{% endblock %}
+
+{% block content %}
+<h2>Add Timesheet</h2>
+
+<form method="POST" class="login-form">
+
+    <label for="start_date">Start Date</label>
+    <input
+        type="text"
+        id="start_date"
+        name="start_date"
+        value="{{ default_start_date }}"
+        class="date-input js-timesheet-start-date"
+        readonly
+        required
+    >
+
+    <label for="end_date">End Date</label>
+    <input
+        type="text"
+        id="end_date"
+        name="end_date"
+        value="{{ form_data['end_date'] if form_data else '' }}"
+        class="date-input js-timesheet-end-date {% if error_field == 'end_date' %}input-error{% endif %}"
+        required
+    >
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="total_days">Total Days</label>
+    <input
+        type="number"
+        id="total_days"
+        name="total_days"
+        value="{{ form_data['total_days'] if form_data else '' }}"
+        required
+    >
+
+    <label for="reviewer_name">Reviewed By</label>
+    <input
+        type="text"
+        id="reviewer_name"
+        name="reviewer_name"
+        value="{{ form_data['reviewer_name'] if form_data else '' }}"
+    >
+
+    <button type="submit">Save Timesheet</button>
+
+</form>
+{% endblock %}

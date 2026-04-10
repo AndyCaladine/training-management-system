@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}Add Periodic Review{% endblock %}
+
+{% block content %}
+<h2>Add Periodic Review</h2>
+
+<div class="profile-card">
+    <div class="profile-main">
+        <h2>Review Period</h2>
+        <p class="profile-meta">
+            {{ default_start_date | format_date }} • {{ default_end_date | format_date }}
+        </p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card approved">
+        <h4>Timesheet Days</h4>
+        <p>{{ review_timesheet_days }}</p>
+    </div>
+
+    <div class="stat-card total">
+        <h4>Learning Hours</h4>
+        <p>{{ review_learning_hours }}</p>
+    </div>
+
+    <div class="stat-card info">
+        <h4>Exams Passed</h4>
+        <p>{{ review_exams_passed }}</p>
+    </div>
+
+    <div class="stat-card draft">
+        <h4>Pending Items</h4>
+        <p>{{ review_pending_items }}</p>
+    </div>
+</div>
+
+<div class="review-context-grid">
+
+    <div class="review-context-card">
+        <h3>Timesheets in Period</h3>
+        {% if review_timesheets %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ts in review_timesheets %}
+                            <tr>
+                                <td>{{ ts["start_date"] | format_date }}</td>
+                                <td>{{ ts["end_date"] | format_date }}</td>
+                                <td>{{ ts["total_days"] }}</td>
+                                <td>
+                                    <span class="status-badge {{ ts['approval_status'] }}">
+                                        {{ ts["approval_status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No timesheets in this review period.</p>
+        {% endif %}
+    </div>
+
+    <div class="review-context-card">
+        <h3>Learning in Period</h3>
+        {% if review_learning_records %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Hours</th>
+                            <th>Status</th>
+                            <th>Review</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in review_learning_records %}
+                            <tr>
+                                <td>{{ record["course_title"] }}</td>
+                                <td>{{ record["hours_spent"] }}</td>
+                                <td>
+                                    <span class="status-badge {{ record['status'] }}">
+                                        {{ record["status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge {{ record['review_status'] }}">
+                                        {{ record["review_status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No learning records in this review period.</p>
+        {% endif %}
+    </div>
+
+    <div class="review-context-card">
+        <h3>Exams in Period</h3>
+        {% if review_exams %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>Date</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in review_exams %}
+                            <tr>
+                                <td>{{ exam["module_name"] }}</td>
+                                <td>{{ exam["exam_date"] | format_date }}</td>
+                                <td>
+                                    <span class="status-badge {{ exam['result_status'] }}">
+                                        {{ exam["result_status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No exams in this review period.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<form method="POST" class="learning-form">
+
+    <label for="review_start_date">Review Start Date</label>
+    <input
+        type="text"
+        id="review_start_date"
+        name="review_start_date"
+        value="{{ default_start_date }}"
+        class="date-input"
+        readonly
+        required
+    >
+
+    <label for="review_end_date">Review End Date</label>
+    <input
+        type="text"
+        id="review_end_date"
+        name="review_end_date"
+        value="{{ default_end_date }}"
+        class="date-input"
+        readonly
+        required
+    >
+
+    <label for="student_reflection">Student Reflection</label>
+    <textarea
+        id="student_reflection"
+        name="student_reflection"
+        rows="5"
+        class="{% if error_field == 'student_reflection' %}input-error{% endif %}"
+        required
+    >{{ form_data['student_reflection'] if form_data else '' }}</textarea>
+    <div class="field-meta">
+        <small class="helper-text">Minimum 50 characters.</small>
+        <small id="student_reflection_counter" class="char-counter">0 characters</small>
+    </div>
+    <small id="student_reflection_live_error" class="error live-error" style="display: none;">
+        Student reflection should be at least 50 characters.
+    </small>
+    {% if error_field == "student_reflection" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="achievements_last_period">Achievements in the Last 6 Months</label>
+    <textarea
+        id="achievements_last_period"
+        name="achievements_last_period"
+        rows="4"
+        class="{% if error_field == 'achievements_last_period' %}input-error{% endif %}"
+    >{{ form_data['achievements_last_period'] if form_data else '' }}</textarea>
+    <div class="field-meta">
+        <small class="helper-text">Minimum 50 characters.</small>
+        <small id="achievements_last_period_counter" class="char-counter">0 characters</small>
+    </div>
+    <small id="achievements_last_period_live_error" class="error live-error" style="display: none;">
+        Achievements should be at least 50 characters.
+    </small>
+    {% if error_field == "achievements_last_period" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="challenges_last_period">Challenges in the Last 6 Months</label>
+    <textarea
+        id="challenges_last_period"
+        name="challenges_last_period"
+        rows="4"
+        class="{% if error_field == 'challenges_last_period' %}input-error{% endif %}"
+    >{{ form_data['challenges_last_period'] if form_data else '' }}</textarea>
+    <div class="field-meta">
+        <small class="helper-text">Minimum 50 characters.</small>
+        <small id="challenges_last_period_counter" class="char-counter">0 characters</small>
+    </div>
+    <small id="challenges_last_period_live_error" class="error live-error" style="display: none;">
+        Challenges should be at least 50 characters.
+    </small>
+    {% if error_field == "challenges_last_period" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="goals_next_period">Goals for the Next 6 Months</label>
+    <textarea
+        id="goals_next_period"
+        name="goals_next_period"
+        rows="4"
+        class="{% if error_field == 'goals_next_period' %}input-error{% endif %}"
+    >{{ form_data['goals_next_period'] if form_data else '' }}</textarea>
+    <div class="field-meta">
+        <small class="helper-text">Minimum 50 characters.</small>
+        <small id="goals_next_period_counter" class="char-counter">0 characters</small>
+    </div>
+    <small id="goals_next_period_live_error" class="error live-error" style="display: none;">
+        Goals should be at least 50 characters.
+    </small>
+    {% if error_field == "goals_next_period" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="support_needed">Support Needed</label>
+    <textarea
+        id="support_needed"
+        name="support_needed"
+        rows="4"
+        class="{% if error_field == 'support_needed' %}input-error{% endif %}"
+    >{{ form_data['support_needed'] if form_data else '' }}</textarea>
+    <div class="field-meta">
+        <small class="helper-text">Minimum 50 characters.</small>
+        <small id="support_needed_counter" class="char-counter">0 characters</small>
+    </div>
+    <small id="support_needed_live_error" class="error live-error" style="display: none;">
+        Support needed should be at least 50 characters.
+    </small>
+    {% if error_field == "support_needed" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <button type="submit" class="button-link">Save Periodic Review</button>
+</form>
+{% endblock %}

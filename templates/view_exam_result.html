@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Exam Result{% endblock %}
+
+{% block content %}
+<h2>Exam Result</h2>
+
+<div class="learning-form">
+    <div>
+        <label>Level</label>
+        <p>{{ exam["level_name"] }}</p>
+    </div>
+
+    <div>
+        <label>Module Code</label>
+        <p>{{ exam["module_code"] }}</p>
+    </div>
+
+    <div>
+        <label>Module Name</label>
+        <p>{{ exam["module_name"] }}</p>
+    </div>
+
+    <div>
+        <label>Exam Date</label>
+        <p>{{ exam["exam_date"] | format_date if exam["exam_date"] else "-" }}</p>
+    </div>
+
+    <div>
+        <label>Result</label>
+        <p>
+            <span class="status-badge {{ exam['result_status'] }}">
+                {{ exam["result_status"].replace("_", " ").title() }}
+            </span>
+        </p>
+    </div>
+
+    <div>
+        <label>Score</label>
+        <p>{{ exam["score"] if exam["score"] is not none else "-" }}</p>
+    </div>
+
+    <div>
+        <label>Examiner Feedback</label>
+        <p>{{ exam["examiner_feedback"] or "-" }}</p>
+    </div>
+
+    <a href="{{ url_for('student.student_dashboard') }}" class="button-link">Back to Dashboard</a>
+</div>
+{% endblock %}

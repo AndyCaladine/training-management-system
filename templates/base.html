@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+            <title>{% block title %}Training System{% endblock %}</title>
+    
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        {% if session.get('user_id') %}
+
+            {% endif %}
+        </head>
+
+        <body>
+            <header class="app-header">
+                <div class="header-left">
+                    <h1 class="app-title">Training Management System</h1>
+                </div>
+
+                <div class="header-right">
+                    {% if request.endpoint != 'student_dashboard' %}
+                        <a href="{{ url_for('student.student_dashboard') }}" class="nav-button secondary">
+                            Home
+                        </a>
+                    {% endif %}
+
+                    <a href="{{ url_for('logout') }}" class="nav-button danger">
+                        Logout
+                    </a>
+                </div>
+            </header>
+
+            <main>
+                {% block content %}{% endblock %}
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">{{ message }}</div>       
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </main>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+        </body>
+    </html>

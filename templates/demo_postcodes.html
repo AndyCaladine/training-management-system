@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Demo Postcodes{% endblock %}
+
+{% block content %}
+<h2>Demo Postcodes and Addresses</h2>
+<p>
+    This registration form uses a demo postcode lookup. Use one of the postcodes below,
+    or enter an address manually in the registration form.
+</p>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Address Line 1</th>
+                <th>Address Line 2</th>
+                <th>Town / City</th>
+                <th>County</th>
+                <th>Postcode</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for address in addresses %}
+            <tr>
+                <td>{{ address.address_line_1 }}</td>
+                <td>{{ address.address_line_2 }}</td>
+                <td>{{ address.town_city }}</td>
+                <td>{{ address.county }}</td>
+                <td><strong>{{ address.postcode }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Export Student Records{% endblock %}
+
+{% block content %}
+<h2>Export Student Records</h2>
+<p>Select one or more sections to include in the PDF export.</p>
+
+<form method="POST" action="{{ url_for('student.export_student_pdf') }}" class="learning-form">
+    <label>
+        <input type="checkbox" id="select_all_sections">
+        Select all
+    </label>
+
+    <label>
+        <input type="checkbox" name="sections" value="timesheets">
+        Timesheets
+    </label>
+
+    <label>
+        <input type="checkbox" name="sections" value="learning">
+        Learning Tracker
+    </label>
+
+    <label>
+        <input type="checkbox" name="sections" value="exams">
+        Exams Tracker
+    </label>
+
+    <label>
+        <input type="checkbox" name="sections" value="reviews">
+        Periodic Reviews
+    </label>
+
+    <button type="submit" class="button-link secondary-button">Generate Export</button>
+</form>
+{% endblock %}

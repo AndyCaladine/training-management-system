@@ -1,0 +1,1185 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+}
+
+header {
+    background: #1f2937;
+    color: white;
+    padding: 1rem;
+}
+
+main {
+    padding: 2rem;
+}
+
+
+/* This is the styles for the Timesheet page of the application */
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 420px;
+    }
+
+    .login-form input {
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .login-form button {
+        margin-top: 1rem;
+        padding: 0.85rem;
+        border: none;
+        border-radius: 8px;
+        background: #2563eb;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .input-error {
+        border: 2px solid red !important;
+        background-color: #ffe5e5 !important;
+        outline: none;
+    }
+
+    .error {
+        color: red;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .date-input {
+        width: 100%;
+        max-width: 420px;
+        padding: 0.9rem 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: white;
+        font-size: 1rem;
+        color: #111827;
+        box-sizing: border-box;
+    }
+
+    .date-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* This is for the edit timesheet functions */
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .button-link {
+        display: inline-block;
+        padding: 0.8rem 1.2rem;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .button-link:hover {
+        opacity: 0.95;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-card h4 {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.95rem;
+        color: #4b5563;
+    }
+
+    .stat-card p {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .stat-card.approved {
+        border-left: 5px solid #16a34a;
+    }
+
+    .stat-card.draft {
+        border-left: 5px solid #2563eb;
+    }
+
+    .stat-card.rejected {
+        border-left: 5px solid #dc2626;
+    }
+
+    .stat-card.total {
+        border-left: 5px solid #7c3aed;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    th, td {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+    }
+
+    th {
+        background: #f9fafb;
+        font-size: 0.9rem;
+        color: #374151;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-badge.draft {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .status-badge.submitted {
+        background: #ede9fe;
+        color: #6d28d9;
+    }
+
+    .status-badge.approved {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-badge.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .table-action {
+        color: #2563eb;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .table-action:hover {
+        text-decoration: underline;
+    }
+
+    .muted-text {
+        color: #9ca3af;
+    }
+
+/* Filters on the student dashboard */
+
+    .filter-button-group button {
+        padding: 0.8rem 1.2rem;
+        border-radius: 10px;
+        border: none;
+        background: #374151; /* dark grey */
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .filter-button-group button:hover {
+        background: #1f2937;
+    }
+
+    .filter-button-group button:disabled,
+    .button-disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    .filter-row th {
+    background: #ffffff;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    }
+
+    .filter-row input,
+    .filter-row select {
+        width: 100%;
+        padding: 0.65rem 0.8rem;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: white;
+        font-size: 0.9rem;
+        box-sizing: border-box;
+    }
+
+    .filter-row input:focus,
+    .filter-row select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .table-filter-button {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: none;
+        border-radius: 10px;
+        background: #374151;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .table-filter-button:hover {
+        background: #1f2937;
+    }
+
+    .table-filter-button:disabled,
+    .table-filter-button.button-disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+/* Submitting Timesheet rows student */
+
+    .table-actions-bar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+    }
+
+    .submit-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .table-select {
+        min-width: 260px;
+        padding: 0.75rem 0.9rem;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: white;
+        font-size: 0.95rem;
+    }
+
+    .table-select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .secondary-button {
+        background: #7c3aed;
+    }
+
+    .secondary-button:hover {
+        opacity: 0.95;
+    }
+
+    /* PROFILE CARD */
+.profile-card {
+    background: linear-gradient(135deg, #1f2937, #374151);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.profile-main h2 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.profile-meta {
+    margin-top: 0.5rem;
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+
+/* AGREEMENT GRID */
+    .agreement-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* AGREEMENT ACTION */
+    .agreement-action {
+        margin-bottom: 2rem;
+    }
+
+    /* Slight tweak to stat cards when used here */
+    .agreement-grid .stat-card {
+        padding: 1.2rem;
+    }
+
+    .agreement-grid .stat-card h4 {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.4rem;
+    }
+
+    .agreement-grid .stat-card p {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+/* Submit file button */
+    .agreement-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+    }
+
+    .agreement-button {
+        background: #2563eb;
+    }
+
+    .agreement-button:hover {
+        opacity: 0.95;
+    }
+
+/* Header and Nav bar */
+
+    /* HEADER */
+    .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 2rem;
+        background: #1f2937;
+        color: white;
+    }
+
+    .app-title {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+
+    /* NAV BUTTONS */
+    .header-right {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .nav-button {
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    /* Home button */
+    .nav-button.secondary {
+        background: #374151;
+        color: white;
+    }
+
+    .nav-button.secondary:hover {
+        background: #4b5563;
+    }
+
+    /* Logout button */
+    .nav-button.danger {
+        background: #dc2626;
+        color: white;
+    }
+
+    .nav-button.danger:hover {
+        background: #b91c1c;
+    }
+
+    /* Styles for the Add learning function */ 
+
+    .learning-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        max-width: 720px;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .learning-form input,
+    .learning-form select,
+    .learning-form textarea {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: white;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    .learning-form input:focus,
+    .learning-form select:focus,
+    .learning-form textarea:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .helper-text {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-top: -0.35rem;
+    }
+
+    textarea {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    }
+
+    .field-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: -0.35rem;
+    }
+
+    .char-counter {
+        color: #6b7280;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .char-counter.too-short {
+        color: #dc2626;
+        font-weight: 600;
+    }
+
+    .live-error {
+        margin-top: -0.35rem;
+    }
+
+/* Filters and styles for Learning Tracker */
+
+    .status-badge.planned {
+    background: #f3f4f6;
+    color: #374151;
+    }
+
+    .status-badge.in_progress {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-badge.completed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+/* Exam Results */
+
+    .status-badge.not_attempted {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .status-badge.booked {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .status-badge.sat {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-badge.passed {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-badge.failed {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .completion-badge {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #166534;
+    }
+
+/* 6 Monthly reviews */
+
+    .review-context-grid {
+        display: grid;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .review-context-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .review-context-card h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        color: #111827;
+    }
+
+
+/* Dashboard selector cards */
+    .dashboard-selector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-selector-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-selector-card {
+        background: white;
+        border: none;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        text-align: left;
+        font: inherit;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .dashboard-selector-card.approved {
+        border-left: 5px solid #16a34a;
+    }
+
+    .dashboard-selector-card.draft {
+        border-left: 5px solid #2563eb;
+    }
+
+    .dashboard-selector-card.rejected {
+        border-left: 5px solid #dc2626;
+    }
+
+    .dashboard-selector-card.total {
+        border-left: 5px solid #7c3aed;
+    }
+
+    .dashboard-selector-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-selector-card.active {
+        outline: 3px solid rgba(37, 99, 235, 0.18);
+        transform: translateY(-2px);
+    }
+
+    .dashboard-selector-title {
+        display: block;
+        margin-bottom: 0.85rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .dashboard-selector-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .dashboard-selector-mini {
+        background: #f9fafb;
+        border-radius: 10px;
+        padding: 0.75rem;
+    }
+
+    .dashboard-selector-mini small {
+        display: block;
+        margin-bottom: 0.25rem;
+        color: #4b5563;
+        font-size: 0.85rem;
+    }
+
+    .dashboard-selector-mini strong {
+        font-size: 1.35rem;
+        color: #111827;
+    }
+
+    .dashboard-section-hidden {
+        display: none;
+    }
+
+/* =========================================================
+   AUTH / LOGIN / REGISTRATION
+   ========================================================= */
+
+/* ---------- Login / auth landing ---------- */
+
+.auth-container {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.auth-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.auth-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    border-radius: 12px 0 0 12px;
+}
+
+.login-card::before {
+    background: #3b82f6;
+}
+
+.student-card::before {
+    background: #6a3df0;
+}
+
+.employer-card::before {
+    background: #14b8a6;
+}
+
+.auth-options {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.auth-options .auth-card {
+    flex: 1;
+    min-width: 280px;
+}
+
+.auth-card input {
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    border: 1px solid #cfd8e3;
+    background: #fcfdff;
+    box-sizing: border-box;
+}
+
+.auth-card input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+}
+
+.btn-primary {
+    width: 100%;
+    background: #3b82f6;
+    color: white;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.btn-secondary {
+    display: inline-block;
+    background: #6a3df0;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+}
+
+.btn-secondary:hover,
+.btn-primary:hover {
+    opacity: 0.95;
+}
+
+.what-you-need {
+    margin: 1rem 0 1.25rem 0;
+    padding: 0.9rem 1rem;
+    background: #f8f9fb;
+    border-radius: 10px;
+}
+
+.what-you-need h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.what-you-need ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.what-you-need li {
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+}
+
+/* ---------- Shared accent helpers ---------- */
+
+.accent-blue {
+    border-left: 6px solid #3b82f6;
+}
+
+.accent-purple {
+    border-left: 6px solid #6a3df0;
+}
+
+.accent-teal {
+    border-left: 6px solid #14b8a6;
+}
+
+.accent-orange {
+    border-left: 6px solid #f59e0b;
+}
+
+/* ---------- Student registration page ---------- */
+
+.register-page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.register-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(320px, 430px);
+    gap: 2rem;
+    align-items: start;
+}
+
+.register-left h1,
+.register-right h2 {
+    margin-top: 0;
+}
+
+.register-intro {
+    margin: 0 0 1.5rem 0;
+    color: #5b6575;
+    font-size: 1rem;
+}
+
+/* ---------- Registration cards ---------- */
+
+.register-card,
+.live-summary-card,
+.agreement-preview-box,
+.scroll-doc-box,
+.signature-box {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e7ebf0;
+}
+
+.register-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: visible; /* IMPORTANT: do not clip date controls */
+}
+
+.card-access {
+    border-left: 6px solid #3b82f6;
+}
+
+.card-account {
+    border-left: 6px solid #6a3df0;
+}
+
+.card-agreement {
+    border-left: 6px solid #14b8a6;
+}
+
+.card-declarations {
+    border-left: 6px solid #f59e0b;
+}
+
+.register-card h2 {
+    margin: 0 0 1.25rem 0;
+    font-size: 1.8rem;
+    line-height: 1.2;
+}
+
+/* ---------- Form grids ---------- */
+
+.form-grid {
+    display: grid;
+    gap: 1.1rem 1.25rem;
+    position: relative;
+    z-index: 1;
+}
+
+.two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.form-field-full {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    font-weight: 700;
+    font-size: 0.98rem;
+    margin-bottom: 0.45rem;
+    color: #1f2937;
+}
+
+.form-field small {
+    margin-top: 0.45rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* ---------- Inputs / selects ---------- */
+
+.form-field input,
+.form-field select,
+.duration-grid input {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid #cfd8e3;
+    border-radius: 12px;
+    background: #fcfdff;
+    font-size: 1rem;
+    line-height: 1.2;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.duration-grid input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+}
+
+/* Keep native date picker behaviour */
+.form-field input[type="date"] {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.85rem 0.95rem;
+    appearance: auto;
+    -webkit-appearance: auto;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+/* Disabled employer field */
+.form-field input:disabled {
+    background: #f3f6fa;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* ---------- Address lookup ---------- */
+
+.address-search-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.manual-address-fields {
+    display: none;
+    margin-top: 1rem;
+}
+
+.manual-address-fields.show {
+    display: block;
+}
+
+.btn-linkish {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+/* ---------- Agreement duration ---------- */
+
+.duration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 0.35rem;
+}
+
+.agreement-duration-field {
+    margin-top: 1rem;
+}
+
+/* ---------- Declarations ---------- */
+
+.declaration-status {
+    background: #f8fafc;
+    border: 1px solid #e5eaf1;
+    border-radius: 14px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.declaration-status p {
+    margin: 0 0 0.6rem 0;
+}
+
+.declaration-status p:last-child {
+    margin-bottom: 0;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid #e5eaf1;
+    border-radius: 12px;
+    background: #fbfcfe;
+    margin-bottom: 0.9rem;
+}
+
+.checkbox-row input[type="checkbox"] {
+    margin-top: 0.25rem;
+    transform: scale(1.15);
+}
+
+.checkbox-row span {
+    line-height: 1.45;
+}
+
+.disabled-check {
+    opacity: 0.6;
+}
+
+.register-submit-btn {
+    width: 100%;
+    margin-top: 0.8rem;
+    min-height: 52px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* ---------- Right-hand live preview ---------- */
+
+.register-right {
+    position: sticky;
+    top: 1.5rem;
+}
+
+.register-right h2 {
+    margin-bottom: 1rem;
+}
+
+.live-summary-card,
+.agreement-preview-box,
+.scroll-doc-box,
+.signature-box {
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.live-summary p {
+    margin: 0 0 0.85rem 0;
+    font-size: 1rem;
+}
+
+.live-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.agreement-preview-box h3,
+.scroll-doc-box h3,
+.signature-box h3 {
+    margin: 0 0 0.85rem 0;
+    font-size: 1.35rem;
+}
+
+.agreement-preview-box p,
+.scroll-doc-box p {
+    line-height: 1.6;
+}
+
+.scroll-doc {
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+    line-height: 1.65;
+}
+
+.scroll-doc::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-doc::-webkit-scrollbar-thumb {
+    background: #cfd8e3;
+    border-radius: 8px;
+}
+
+.scroll-doc::-webkit-scrollbar-track {
+    background: #f3f5f8;
+}
+
+.signature-box {
+    border: 1px dashed #cfd8e3;
+    background: linear-gradient(to bottom, #ffffff, #fafcff);
+}
+
+.signature-name {
+    font-family: "Brush Script MT", cursive;
+    font-size: 2rem;
+    margin: 0.5rem 0 0.3rem 0;
+    color: #1f2937;
+}
+
+.signature-date {
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+    .register-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .register-right {
+        position: static;
+    }
+}
+
+@media (max-width: 700px) {
+    .two-col,
+    .duration-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .register-page {
+        padding: 1rem;
+    }
+
+    .register-card,
+    .live-summary-card,
+    .agreement-preview-box,
+    .scroll-doc-box,
+    .signature-box {
+        padding: 1rem;
+    }
+}
+.dob-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 700px) {
+    .dob-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Access Card Styles */
+    .field-message {
+        margin: 0.5rem 0 0 0;
+        font-size: 0.92rem;
+        font-weight: 600;
+    }
+
+    .field-message.success {
+        color: #166534;
+    }
+
+    .field-message.error {
+        color: #b91c1c;
+    }

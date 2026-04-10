@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+
+    <!-- LOGIN CARD -->
+    <div class="auth-card login-card">
+        <h2>Login</h2>
+        <p class="auth-intro">
+            Access your account or register to begin your journey.
+        </p>
+
+        <form method="POST">
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <p style="margin-top: 0.75rem;">
+            <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+        </p>
+    </div>
+
+    <!-- REGISTRATION OPTIONS -->
+    <div class="auth-options">
+
+        <div class="auth-card student-card">
+            <h3>Student Registration</h3>
+            <p>
+                Register as a student to manage your training agreement, track your progress,
+                log learning activity, and submit timesheets and reviews.
+            </p>
+
+            <div class="what-you-need">
+                <h4>What you’ll need</h4>
+                <ul>
+                    <li>Your access code from your employer or training provider</li>
+                    <li>Your training agreement start date</li>
+                    <li>Your agreement duration</li>
+                    <li>Your employer or training contact details</li>
+                    <li>Your personal contact details</li>
+                </ul>
+            </div>
+
+            <a href="{{ url_for('registration.register_student') }}" class="btn-secondary">
+                Register as Student
+            </a>
+        </div>
+
+        <div class="auth-card employer-card">
+            <h3>Employer Contact Registration</h3>
+            <p>
+                Register as an employer contact to review and approve student submissions,
+                provide feedback, and support the training journey.
+            </p>
+
+            <div class="what-you-need">
+                <h4>What you’ll need</h4>
+                <ul>
+                    <li>Your employer access code</li>
+                    <li>Your company name</li>
+                    <li>Your contact details</li>
+                    <li>Your student or training programme reference information, if provided</li>
+                </ul>
+                <br>
+            </div>
+
+            <a href="{{ url_for('registration.register_employer') }}" class="btn-secondary">
+                Register as Employer
+            </a>
+        </div>
+
+    </div>
+
+    </div>
+
+</div>
+{% endblock %}

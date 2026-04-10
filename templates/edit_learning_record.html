@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Learning Record{% endblock %}
+
+{% block content %}
+<h2>Edit Learning Record</h2>
+
+<form method="POST" class="learning-form">
+
+    <label for="date_started">Date Started</label>
+    <input
+        type="text"
+        id="date_started"
+        name="date_started"
+        value="{{ form_data['date_started'] if form_data else record['date_started'] }}"
+        class="date-input {% if error_field == 'date_started' %}input-error{% endif %}"
+        required
+    >
+    {% if error_field == "date_started" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="course_title">Course Title</label>
+    <input
+        type="text"
+        id="course_title"
+        name="course_title"
+        value="{{ form_data['course_title'] if form_data else record['course_title'] }}"
+        class="{% if error_field == 'course_title' %}input-error{% endif %}"
+        required
+    >
+    {% if error_field == "course_title" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="training_category">Training Category</label>
+    <select
+        id="training_category"
+        name="training_category"
+        class="{% if error_field == 'training_category' %}input-error{% endif %}"
+        required
+    >
+        <option value="">Choose category</option>
+        <option value="Personal Development" {% if (form_data and form_data['training_category'] == 'Personal Development') or (not form_data and record['training_category'] == 'Personal Development') %}selected{% endif %}>Personal Development</option>
+        <option value="Professional Soft Skills" {% if (form_data and form_data['training_category'] == 'Professional Soft Skills') or (not form_data and record['training_category'] == 'Professional Soft Skills') %}selected{% endif %}>Professional Soft Skills</option>
+        <option value="Professional Technical Skills" {% if (form_data and form_data['training_category'] == 'Professional Technical Skills') or (not form_data and record['training_category'] == 'Professional Technical Skills') %}selected{% endif %}>Professional Technical Skills</option>
+    </select>
+    {% if error_field == "training_category" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="learning_outcomes">Learning Outcomes</label>
+    <textarea
+        id="learning_outcomes"
+        name="learning_outcomes"
+        rows="5"
+        class="{% if error_field == 'learning_outcomes' %}input-error{% endif %}"
+        required
+    >{{ form_data['learning_outcomes'] if form_data else record['learning_outcomes'] }}</textarea>
+
+    <div class="field-meta">
+        <small class="helper-text">
+            Write this in a SMART style: specific, useful, and outcome-focused.
+        </small>
+        <small id="learning_outcomes_counter" class="char-counter">0 characters</small>
+    </div>
+
+    <small id="learning_outcomes_live_error" class="error live-error" style="display: none;">
+        Learning outcomes should be at least 20 characters.
+    </small>
+
+    {% if error_field == "learning_outcomes" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="date_completed">Date Completed</label>
+    <input
+        type="text"
+        id="date_completed"
+        name="date_completed"
+        value="{{ form_data['date_completed'] if form_data else (record['date_completed'] or '') }}"
+        class="date-input {% if error_field == 'date_completed' %}input-error{% endif %}"
+    >
+    {% if error_field == "date_completed" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="hours_spent">Hours Spent</label>
+    <input
+        type="number"
+        step="0.5"
+        min="0.5"
+        id="hours_spent"
+        name="hours_spent"
+        value="{{ form_data['hours_spent'] if form_data else record['hours_spent'] }}"
+        class="{% if error_field == 'hours_spent' %}input-error{% endif %}"
+        required
+    >
+    {% if error_field == "hours_spent" %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <label for="status">Status</label>
+    <select id="status" name="status" required>
+        <option value="planned" {% if (form_data and form_data['status'] == 'planned') or (not form_data and record['status'] == 'planned') %}selected{% endif %}>Planned</option>
+        <option value="in_progress" {% if (form_data and form_data['status'] == 'in_progress') or (not form_data and record['status'] == 'in_progress') %}selected{% endif %}>In Progress</option>
+        <option value="completed" {% if (form_data and form_data['status'] == 'completed') or (not form_data and record['status'] == 'completed') %}selected{% endif %}>Completed</option>
+    </select>
+
+    <label for="certification_expiry_date">Certification Expiry Date</label>
+    <input
+        type="text"
+        id="certification_expiry_date"
+        name="certification_expiry_date"
+        value="{{ form_data['certification_expiry_date'] if form_data else (record['certification_expiry_date'] or '') }}"
+        class="date-input"
+    >
+
+    <label for="notes">Notes or Comments</label>
+    <textarea
+        id="notes"
+        name="notes"
+        rows="4"
+    >{{ form_data['notes'] if form_data else (record['notes'] or '') }}</textarea>
+
+    <button type="submit" class="button-link">Update Learning Record</button>
+</form>
+{% endblock %}

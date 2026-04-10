@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="register-page">
+    <div class="register-layout">
+
+        <section class="register-left">
+
+            <h1>Student Registration</h1>
+            <p class="register-intro">
+                Create your student account and complete your training agreement setup.
+            </p>
+
+            <div class="card register-card card-access">
+                <h2>Access</h2>
+                <div class="form-field">
+                    <label for="access_code">Access Code</label>
+                    <input
+                        type="text"
+                        id="access_code"
+                        name="access_code"
+                        form="student-registration-form"
+                        value="{{ form_data.access_code if form_data else '' }}"
+                        required
+                    >
+                    <small>
+                        Enter the access code provided for this demo registration.
+                        <a href="{{ url_for('registration.demo_access_codes') }}" target="_blank" rel="noopener noreferrer">
+                            View demo access codes
+                        </a>.
+                    </small>
+                    <p id="access-code-message" class="field-message"></p>
+                </div>
+            </div>
+
+            <form method="POST" id="student-registration-form">
+
+                <div class="card register-card card-account">
+                    <h2>Account Details</h2>
+
+                    <div class="form-grid two-col">
+                        <div class="form-field">
+                            <label for="first_name">First Name</label>
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                value="{{ form_data.first_name if form_data else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="last_name">Last Name</label>
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                value="{{ form_data.last_name if form_data else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ form_data.email if form_data else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="phone">Phone Number</label>
+                            <input
+                                type="text"
+                                id="phone"
+                                name="phone"
+                                value="{{ form_data.phone if form_data else '' }}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-field form-field-full">
+                        <label>Date of Birth</label>
+                        <div class="dob-grid">
+                            <div class="form-field">
+                                <label for="dob_day">Day</label>
+                                <input
+                                    type="text"
+                                    id="dob_day"
+                                    list="dob-day-options"
+                                    placeholder="Day"
+                                    autocomplete="off"
+                                >
+                                <datalist id="dob-day-options">
+                                    {% for day in range(1, 32) %}
+                                        <option value="{{ day }}"></option>
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="dob_month">Month</label>
+                                <input
+                                    type="text"
+                                    id="dob_month"
+                                    list="dob-month-options"
+                                    placeholder="Month"
+                                    autocomplete="off"
+                                >
+                                <datalist id="dob-month-options">
+                                    <option value="January"></option>
+                                    <option value="February"></option>
+                                    <option value="March"></option>
+                                    <option value="April"></option>
+                                    <option value="May"></option>
+                                    <option value="June"></option>
+                                    <option value="July"></option>
+                                    <option value="August"></option>
+                                    <option value="September"></option>
+                                    <option value="October"></option>
+                                    <option value="November"></option>
+                                    <option value="December"></option>
+                                </datalist>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="dob_year">Year</label>
+                                <input
+                                    type="text"
+                                    id="dob_year"
+                                    list="dob-year-options"
+                                    placeholder="Year"
+                                    autocomplete="off"
+                                >
+                                <datalist id="dob-year-options"></datalist>
+                            </div>
+                        </div>
+
+                        <input
+                            type="hidden"
+                            id="date_of_birth"
+                            name="date_of_birth"
+                            value="{{ form_data.date_of_birth if form_data else '' }}"
+                        >
+                        <small>Select or search for the day, month, and year of birth.</small>
+                    </div>
+
+                    <div class="form-grid two-col">
+                        <div class="form-field">
+                            <label for="postcode">Postcode</label>
+                            <input
+                                type="text"
+                                id="postcode"
+                                name="postcode"
+                                value="{{ form_data.postcode if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field address-search-field">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn-secondary" id="find-address-btn">
+                                Find Address
+                            </button>
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <small>
+                                This is a demo postcode lookup.
+                                <a href="{{ url_for('registration.demo_postcodes') }}" target="_blank" rel="noopener noreferrer">
+                                    View demo postcodes and addresses
+                                </a>,
+                                or enter your address manually.
+                            </small>
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <label for="address_select">Select Address</label>
+                            <select id="address_select" name="address_select">
+                                <option value="">Select an address</option>
+                            </select>
+                            <small>Choose an address from the search results, or enter it manually below.</small>
+                            <p id="address-lookup-message" class="field-message"></p>
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <button type="button" class="btn-linkish" id="manual-address-toggle">
+                                Enter address manually
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="manual-address-fields" class="manual-address-fields">
+                        <div class="form-grid two-col">
+                            <div class="form-field">
+                                <label for="address_line_1">Address Line 1</label>
+                                <input
+                                    type="text"
+                                    id="address_line_1"
+                                    name="address_line_1"
+                                    value="{{ form_data.address_line_1 if form_data else '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="address_line_2">Address Line 2</label>
+                                <input
+                                    type="text"
+                                    id="address_line_2"
+                                    name="address_line_2"
+                                    value="{{ form_data.address_line_2 if form_data else '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="town_city">Town / City</label>
+                                <input
+                                    type="text"
+                                    id="town_city"
+                                    name="town_city"
+                                    value="{{ form_data.town_city if form_data else '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="county">County / State / Region</label>
+                                <input
+                                    type="text"
+                                    id="county"
+                                    name="county"
+                                    value="{{ form_data.county if form_data else '' }}"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid two-col account-password-grid">
+                        <div class="form-field">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card register-card card-agreement">
+                    <h2>Training Agreement</h2>
+
+                    <div class="form-grid two-col">
+                        <div class="form-field">
+                            <label for="employer_name">Employer / Training Organisation</label>
+                            <input type="text" id="employer_name" name="employer_name" disabled>
+                            <small>This will be populated automatically from your access code.</small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="route_name">Training Route</label>
+                            <select id="route_name" name="route_name" required>
+                                <option value="Standard" selected>Standard</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="start_date">Agreement Start Date</label>
+                            <input
+                                type="date"
+                                id="start_date"
+                                name="start_date"
+                                value="{{ form_data.start_date if form_data else '' }}"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-field agreement-duration-field">
+                        <label for="years">Agreement Duration</label>
+                        <div class="duration-grid">
+                            <input
+                                type="number"
+                                id="years"
+                                name="years"
+                                min="0"
+                                placeholder="Years"
+                                value="{{ form_data.years if form_data else '' }}"
+                            >
+                            <input
+                                type="number"
+                                id="months"
+                                name="months"
+                                min="0"
+                                max="11"
+                                placeholder="Months"
+                                value="{{ form_data.months if form_data else '' }}"
+                            >
+                            <input
+                                type="number"
+                                id="days"
+                                name="days"
+                                min="0"
+                                max="31"
+                                placeholder="Days"
+                                value="{{ form_data.days if form_data else '' }}"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card register-card card-declarations">
+                    <h2>Declarations</h2>
+
+                    <div class="declaration-status">
+                        <p><strong>Terms &amp; Conditions:</strong> <span id="terms-status">Not yet read</span></p>
+                        <p><strong>Student Data Notice:</strong> <span id="gdpr-status">Not yet read</span></p>
+                    </div>
+
+                    <label class="checkbox-row disabled-check">
+                        <input type="checkbox" id="terms_agreed" name="terms_agreed" disabled>
+                        <span>I have read and agree to the Terms &amp; Conditions</span>
+                    </label>
+
+                    <label class="checkbox-row disabled-check">
+                        <input type="checkbox" id="gdpr_agreed" name="gdpr_agreed" disabled>
+                        <span>I have read and understood the Student Data Notice</span>
+                    </label>
+
+                    <button type="submit" class="btn-primary register-submit-btn">
+                        Create Account and Sign Agreement
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <aside class="register-right">
+            <div class="live-summary-card accent-blue">
+                <h2>Live Agreement Preview</h2>
+
+                <div class="live-summary">
+                    <p><strong>Student:</strong> <span id="summary-name">—</span></p>
+                    <p><strong>Employer:</strong> <span id="summary-employer">—</span></p>
+                    <p><strong>Start Date:</strong> <span id="summary-start">—</span></p>
+                    <p><strong>Duration:</strong> <span id="summary-duration">—</span></p>
+                    <p><strong>End Date:</strong> <span id="summary-end">—</span></p>
+                </div>
+            </div>
+
+            <div class="agreement-preview-box accent-teal">
+                <h3>Training Agreement Summary</h3>
+                <p id="agreement-preview-text">
+                    Your agreement preview will appear here as you complete the form.
+                </p>
+            </div>
+
+            <div class="scroll-doc-box accent-orange">
+                <h3>Terms &amp; Conditions</h3>
+                <div class="scroll-doc" id="terms-scroll-box">
+                    <p><strong>Demo Application Notice</strong></p>
+                    <p>
+                        This training management system is a demonstration application created for portfolio,
+                        learning, and development purposes only. You must not enter real personal, employment,
+                        or commercially sensitive data into this system.
+                    </p>
+                    <p>
+                        By continuing, you confirm that the information entered is fictitious and is being used
+                        only to test or demonstrate the system.
+                    </p>
+                    <p>
+                        The training agreement created through this demonstration system is between
+                        <strong id="terms-student-name">the student</strong> and
+                        <strong id="terms-employer-name">the employer</strong>.
+                    </p>
+                    <p>
+                        The agreement is due to begin on <strong id="terms-start-date">the selected start date</strong>
+                        and is intended to continue for
+                        <strong id="terms-duration">the selected duration</strong>,
+                        ending on <strong id="terms-end-date">the calculated end date</strong>.
+                    </p>
+                    <p>
+                        During the demo period, records may be amended, reset, or removed as part of development,
+                        testing, bug fixes, and application improvements. This means data entered into the system
+                        should not be treated as permanent.
+                    </p>
+                    <p>
+                        By agreeing to these Terms &amp; Conditions, you confirm that you understand the purpose
+                        of this demonstration system and wish to proceed on that basis.
+                    </p>
+                </div>
+            </div>
+
+            <div class="scroll-doc-box accent-orange">
+                <h3>Student Data Notice</h3>
+                <div class="scroll-doc" id="gdpr-scroll-box">
+                    <p><strong>Demo Data and Privacy Notice</strong></p>
+                    <p>
+                        This application is not intended for the storage of real personal data. You should only
+                        use fictitious information while interacting with this demonstration system.
+                    </p>
+                    <p>
+                        Information entered into the system may be viewed by the developer for testing,
+                        demonstration, maintenance, and support purposes.
+                    </p>
+                    <p>
+                        During the demo phase, the database may be refreshed to a blank state periodically,
+                        including where development, improvements, bug fixes, or changes to the application are required.
+                    </p>
+                    <p>
+                        If you wish to request the removal of data entered into this demonstration application,
+                        please contact <strong>hello@andycaladine.co.uk</strong>.
+                    </p>
+                    <p>
+                        By confirming this notice, you acknowledge that you have read and understood how demo data
+                        may be used within this training management application.
+                    </p>
+                </div>
+            </div>
+
+            <div class="signature-box accent-orange">
+                <h3>Student Signature</h3>
+                <p class="signature-name" id="signature-name">Awaiting agreement</p>
+                <p class="signature-date" id="signature-date">Date will appear once declarations are accepted</p>
+            </div>
+        </aside>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,802 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+
+{% if student %}
+
+<div class="profile-card">
+    <div class="profile-main">
+        <h2>{{ student["first_name"] }} {{ student["last_name"] }}</h2>
+        <p class="profile-meta">
+            Student No: {{ student["student_number"] }} • {{ student["route_name"] }}
+        </p>
+    </div>
+</div>
+
+<div class="agreement-grid">
+    <div class="stat-card approved">
+        <h4>Agreement Status</h4>
+        <p>{{ agreement["agreement_status"].replace("_", " ").title() if agreement else "N/A" }}</p>
+    </div>
+
+    <div class="stat-card draft">
+        <h4>Agreement Dates</h4>
+        {% if agreement %}
+            <p>{{ agreement["start_date"] | format_date }} → {{ agreement["end_date"] | format_date }}</p>
+        {% else %}
+            <p>N/A</p>
+        {% endif %}
+    </div>
+
+    <div class="stat-card rejected">
+        <h4>Employer</h4>
+        {% if employer %}
+            <p>{{ employer["company_name"] }}</p>
+            <small>{{ employer["contact_name"] }}</small>
+        {% else %}
+            <p>No employer linked</p>
+        {% endif %}
+    </div>
+
+    <div class="stat-card total">
+        <h4>Signatures</h4>
+        {% if agreement %}
+            <p>
+                Student: {{ "✔" if agreement["signed_by_student"] else "✖" }}<br>
+                Employer: {{ "✔" if agreement["signed_by_employer"] else "✖" }}
+            </p>
+        {% else %}
+            <p>N/A</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if agreement and not agreement["signed_by_student"] %}
+    <div class="agreement-action">
+        <form method="POST" action="{{ url_for('student.submit_agreement') }}">
+            <button type="submit" class="button-link agreement-button">
+                Sign and Submit Agreement
+            </button>
+        </form>
+    </div>
+{% endif %}
+
+<hr>
+
+<div class="dashboard-selector-header">
+    <h3>Dashboard</h3>
+
+    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="button-link dashboard-view-all-btn">
+            View All
+        </button>
+
+        <a class="button-link secondary-button"
+           href="{{ url_for('student.student_export_options') }}">
+            Export to PDF
+        </a>
+    </div>
+</div>
+
+<div class="dashboard-selector-grid">
+    <button type="button" class="dashboard-selector-card approved" data-target="timesheets">
+        <span class="dashboard-selector-title">Timesheets</span>
+        <div class="dashboard-selector-stats">
+            <div class="dashboard-selector-mini">
+                <small>Draft</small>
+                <strong>{{ timesheet_draft_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Submitted</small>
+                <strong>{{ timesheet_submitted_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Approved</small>
+                <strong>{{ timesheet_approved_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Rejected</small>
+                <strong>{{ timesheet_rejected_count }}</strong>
+            </div>
+        </div>
+    </button>
+
+    <button type="button" class="dashboard-selector-card draft" data-target="learning">
+        <span class="dashboard-selector-title">Learning Tracker</span>
+        <div class="dashboard-selector-stats">
+            <div class="dashboard-selector-mini">
+                <small>Draft</small>
+                <strong>{{ learning_draft_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Submitted</small>
+                <strong>{{ learning_submitted_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Approved</small>
+                <strong>{{ learning_approved_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Rejected</small>
+                <strong>{{ learning_rejected_count }}</strong>
+            </div>
+        </div>
+    </button>
+
+    <button type="button" class="dashboard-selector-card rejected" data-target="exams">
+        <span class="dashboard-selector-title">Exams Tracker</span>
+        <div class="dashboard-selector-stats">
+            <div class="dashboard-selector-mini">
+                <small>Foundation</small>
+                <strong>{{ foundation_total }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Applied</small>
+                <strong>{{ applied_total }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Professional</small>
+                <strong>{{ professional_total }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Total</small>
+                <strong>{{ foundation_total + applied_total + professional_total }}</strong>
+            </div>
+        </div>
+    </button>
+
+    <button type="button" class="dashboard-selector-card total" data-target="reviews">
+        <span class="dashboard-selector-title">Periodic Reviews</span>
+        <div class="dashboard-selector-stats">
+            <div class="dashboard-selector-mini">
+                <small>Draft</small>
+                <strong>{{ review_draft_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Submitted</small>
+                <strong>{{ review_submitted_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Approved</small>
+                <strong>{{ review_approved_count }}</strong>
+            </div>
+            <div class="dashboard-selector-mini">
+                <small>Rejected</small>
+                <strong>{{ review_rejected_count }}</strong>
+            </div>
+        </div>
+    </button>
+</div>
+
+<div id="timesheets-section" class="dashboard-section-panel">
+    <hr>
+
+    <div class="dashboard-header">
+        <h3>Timesheets</h3>
+        <a class="button-link" href="{{ url_for('student.add_timesheet') }}">Add Timesheet</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card approved">
+            <h4>Approved Days</h4>
+            <p>{{ approved_days }}</p>
+        </div>
+
+        <div class="stat-card draft">
+            <h4>Draft / Submitted Days</h4>
+            <p>{{ draft_days }}</p>
+        </div>
+
+        <div class="stat-card rejected">
+            <h4>Rejected Days</h4>
+            <p>{{ rejected_days }}</p>
+        </div>
+
+        <div class="stat-card total">
+            <h4>Total Counted Days</h4>
+            <p>{{ total_counted_days }}</p>
+        </div>
+    </div>
+
+    {% if timesheets %}
+        <form method="POST" action="{{ url_for('student.submit_timesheets') }}">
+            <div class="table-actions-bar">
+                <div class="submit-controls">
+                    <label for="reviewer_name"><strong>Submit selected to</strong></label>
+                    <select name="reviewer_name" id="reviewer_name" class="table-select">
+                        <option value="">Choose reviewer</option>
+                        {% if employer %}
+                            <option value="{{ employer['contact_name'] }}">
+                                {{ employer['contact_name'] }}{% if employer['company_name'] %} - {{ employer['company_name'] }}{% endif %}
+                            </option>
+                        {% endif %}
+                    </select>
+                    <button type="submit" class="button-link secondary-button">Submit Selected</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Total Days</th>
+                            <th>Reviewer</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <input type="text" id="reviewerFilter" placeholder="Filter reviewer">
+                            </th>
+                            <th>
+                                <select id="statusFilter">
+                                    <option value="">All statuses</option>
+                                    <option value="Draft">Draft</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                            </th>
+                            <th>
+                                <button type="button" id="clearFilters" class="table-filter-button">
+                                    Clear
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ts in timesheets %}
+                            <tr
+                                data-status="{{ ts['approval_status'].replace('_', ' ').title() }}"
+                                data-reviewer="{{ ts['reviewer_name'] or '' }}"
+                            >
+                                <td>
+                                    {% if ts["approval_status"] == "draft" %}
+                                        <input type="checkbox" name="selected_timesheets" value="{{ ts['id'] }}">
+                                    {% else %}
+                                        <span class="muted-text">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ ts["start_date"] | format_date }}</td>
+                                <td>{{ ts["end_date"] | format_date }}</td>
+                                <td>{{ ts["total_days"] }}</td>
+                                <td>{{ ts["reviewer_name"] or "-" }}</td>
+                                <td>
+                                    <span class="status-badge {{ ts['approval_status'] }}">
+                                        {{ ts["approval_status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if ts["approval_status"] != "approved" and ts["approval_status"] != "submitted" %}
+                                        <a class="table-action" href="{{ url_for('student.edit_timesheet', timesheet_id=ts['id']) }}">Edit</a>
+                                    {% elif ts["approval_status"] == "submitted" %}
+                                        <span class="muted-text">Pending Review</span>
+                                    {% else %}
+                                        <span class="muted-text">Locked</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    {% else %}
+        <p>No timesheets yet.</p>
+    {% endif %}
+</div>
+
+<div id="learning-section" class="dashboard-section-panel">
+    <hr>
+
+    <div class="dashboard-header">
+        <h3>Learning Tracker</h3>
+        <a class="button-link" href="{{ url_for('student.add_learning_record') }}">Add Learning Record</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card approved">
+            <h4>Approved Hours</h4>
+            <p>{{ learning_approved_hours }}</p>
+        </div>
+
+        <div class="stat-card draft">
+            <h4>Draft / Submitted Hours</h4>
+            <p>{{ learning_draft_submitted_hours }}</p>
+        </div>
+
+        <div class="stat-card rejected">
+            <h4>Rejected Hours</h4>
+            <p>{{ learning_rejected_hours }}</p>
+        </div>
+
+        <div class="stat-card total">
+            <h4>Total Counted Hours</h4>
+            <p>{{ learning_total_counted_hours }}</p>
+        </div>
+    </div>
+
+    {% if learning_records %}
+        <form method="POST" action="{{ url_for('student.submit_learning_records') }}">
+            <div class="table-actions-bar">
+                <div class="submit-controls">
+                    <label for="learning_reviewer_name"><strong>Submit selected to</strong></label>
+                    <select name="reviewer_name" id="learning_reviewer_name" class="table-select">
+                        <option value="">Choose reviewer</option>
+                        {% if employer %}
+                            <option value="{{ employer['contact_name'] }}">
+                                {{ employer['contact_name'] }}{% if employer['company_name'] %} - {{ employer['company_name'] }}{% endif %}
+                            </option>
+                        {% endif %}
+                    </select>
+                    <button type="submit" class="button-link secondary-button">Submit Selected</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Date Started</th>
+                            <th>Course Title</th>
+                            <th>Category</th>
+                            <th>Hours</th>
+                            <th>Status</th>
+                            <th>Review Status</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <input type="text" id="learningTitleFilter" placeholder="Filter course title">
+                            </th>
+                            <th>
+                                <select id="learningCategoryFilter">
+                                    <option value="">All categories</option>
+                                    <option value="Personal Development">Personal Development</option>
+                                    <option value="Professional Soft Skills">Professional Soft Skills</option>
+                                    <option value="Professional Technical Skills">Professional Technical Skills</option>
+                                </select>
+                            </th>
+                            <th></th>
+                            <th>
+                                <select id="learningStatusFilter">
+                                    <option value="">All statuses</option>
+                                    <option value="Planned">Planned</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </th>
+                            <th>
+                                <select id="learningReviewStatusFilter">
+                                    <option value="">All review statuses</option>
+                                    <option value="Draft">Draft</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                            </th>
+                            <th>
+                                <button type="button" id="clearLearningFilters" class="table-filter-button">
+                                    Clear
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in learning_records %}
+                            <tr
+                                data-learning-title="{{ record['course_title'] }}"
+                                data-learning-category="{{ record['training_category'] }}"
+                                data-learning-status="{{ record['status'].replace('_', ' ').title() }}"
+                                data-learning-review-status="{{ record['review_status'].replace('_', ' ').title() }}"
+                            >
+                                <td>
+                                    {% if record["review_status"] == "draft" %}
+                                        <input type="checkbox" name="selected_learning_records" value="{{ record['id'] }}">
+                                    {% else %}
+                                        <span class="muted-text">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ record["date_started"] | format_date }}</td>
+                                <td>{{ record["course_title"] }}</td>
+                                <td>{{ record["training_category"] }}</td>
+                                <td>{{ record["hours_spent"] }}</td>
+                                <td>
+                                    <span class="status-badge {{ record['status'] }}">
+                                        {{ record["status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge {{ record['review_status'] }}">
+                                        {{ record["review_status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if record["review_status"] in ["draft", "rejected"] %}
+                                        <a class="table-action" href="{{ url_for('student.edit_learning_record', record_id=record['id']) }}">Edit</a>
+                                    {% else %}
+                                        <a class="table-action" href="{{ url_for('student.view_learning_record', record_id=record['id']) }}">View</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    {% else %}
+        <p>No learning records yet.</p>
+    {% endif %}
+</div>
+
+<div id="exams-section" class="dashboard-section-panel">
+    <hr>
+
+    <div class="dashboard-header">
+        <h3>Exams Tracker</h3>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card approved {% if foundation_passed == 6 %}approved{% else %}info{% endif %}">
+            <h4>Foundation</h4>
+            <p>{{ foundation_passed }} / 6</p>
+            {% if foundation_passed == 6 %}
+                <small class="completion-badge">✓ Complete</small>
+            {% endif %}
+        </div>
+
+        <div class="stat-card {% if applied_passed == 6 %}approved{% else %}draft{% endif %}">
+            <h4>Applied</h4>
+            <p>{{ applied_passed }} / 6</p>
+            {% if applied_passed == 6 %}
+                <small class="completion-badge">✓ Complete</small>
+            {% endif %}
+        </div>
+
+        <div class="stat-card {% if professional_passed == 6 %}approved{% else %}rejected{% endif %}">
+            <h4>Professional</h4>
+            <p>{{ professional_passed }} / 6</p>
+            {% if professional_passed == 6 %}
+                <small class="completion-badge">✓ Complete</small>
+            {% endif %}
+        </div>
+
+        <div class="stat-card total">
+            <h4>Total Passed</h4>
+            <p>{{ total_passed }} / 18</p>
+        </div>
+    </div>
+
+    {% if exam_results %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Module</th>
+                        <th>Exam Date</th>
+                        <th>Result</th>
+                        <th>Score</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th>
+                            <select id="examLevelFilter">
+                                <option value="">All levels</option>
+                                <option value="Foundation">Foundation</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Professional">Professional</option>
+                            </select>
+                        </th>
+                        <th>
+                            <input type="text" id="examModuleFilter" placeholder="Filter module">
+                        </th>
+                        <th>
+                            <input type="text" id="examDateFilter" placeholder="Filter date">
+                        </th>
+                        <th>
+                            <select id="examResultFilter">
+                                <option value="">All results</option>
+                                <option value="Not Attempted">Not Attempted</option>
+                                <option value="Booked">Booked</option>
+                                <option value="Sat">Sat</option>
+                                <option value="Passed">Passed</option>
+                                <option value="Failed">Failed</option>
+                            </select>
+                        </th>
+                        <th>
+                            <input type="text" id="examScoreFilter" placeholder="Filter score">
+                        </th>
+                        <th>
+                            <button type="button" id="clearExamFilters" class="table-filter-button">
+                                Clear
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exam_results %}
+                        <tr
+                            data-exam-level="{{ exam['level_name'] }}"
+                            data-exam-module="{{ exam['module_name'] }}"
+                            data-exam-date="{{ exam['exam_date'] | format_date if exam['exam_date'] else '-' }}"
+                            data-exam-result="{{ exam['result_status'].replace('_', ' ').title() }}"
+                            data-exam-score="{{ exam['score'] if exam['score'] is not none else '-' }}"
+                        >
+                            <td>{{ exam["level_name"] }}</td>
+                            <td>{{ exam["module_name"] }}</td>
+                            <td>{{ exam["exam_date"] | format_date if exam["exam_date"] else "-" }}</td>
+                            <td>
+                                <span class="status-badge {{ exam['result_status'] }}">
+                                    {{ exam["result_status"].replace("_", " ").title() }}
+                                </span>
+                            </td>
+                            <td>{{ exam["score"] if exam["score"] is not none else "-" }}</td>
+                            <td>
+                                <a class="table-action" href="{{ url_for('student.view_exam_result', result_id=exam['id']) }}">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No exam results yet.</p>
+    {% endif %}
+</div>
+
+<div id="reviews-section" class="dashboard-section-panel">
+    <hr>
+
+    <div class="dashboard-header">
+        <h3>Periodic Reviews</h3>
+        <a class="button-link" href="{{ url_for('student.add_periodic_review') }}">Add Review</a>
+    </div>
+
+    {% if periodic_reviews %}
+    <div class="stats-grid">
+    <div class="stat-card draft">
+        <h4>Draft Reviews</h4>
+        <p>{{ review_draft_count }}</p>
+    </div>
+
+    <div class="stat-card total">
+        <h4>Submitted Reviews</h4>
+        <p>{{ review_submitted_count }}</p>
+    </div>
+
+    <div class="stat-card approved">
+        <h4>Approved Reviews</h4>
+        <p>{{ review_approved_count }}</p>
+    </div>
+
+    <div class="stat-card rejected">
+        <h4>Rejected Reviews</h4>
+        <p>{{ review_rejected_count }}</p>
+    </div>
+</div>
+        <form method="POST" action="{{ url_for('student.submit_periodic_reviews') }}">
+            <div class="table-actions-bar">
+                <div class="submit-controls">
+                    <label for="periodic_reviewer_name"><strong>Submit selected to</strong></label>
+                    <select name="reviewer_name" id="periodic_reviewer_name" class="table-select">
+                        <option value="">Choose reviewer</option>
+                        {% if employer %}
+                            <option value="{{ employer['contact_name'] }}">
+                                {{ employer['contact_name'] }}{% if employer['company_name'] %} - {{ employer['company_name'] }}{% endif %}
+                            </option>
+                        {% endif %}
+                    </select>
+                    <button type="submit" class="button-link secondary-button">Submit Selected</button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Review Period Start</th>
+                            <th>Review Period End</th>
+                            <th>Employer</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in periodic_reviews %}
+                            <tr>
+                                <td>
+                                    {% if review["review_status"] == "draft" %}
+                                        <input type="checkbox" name="selected_periodic_reviews" value="{{ review['id'] }}">
+                                    {% else %}
+                                        <span class="muted-text">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ review["review_start_date"] | format_date }}</td>
+                                <td>{{ review["review_end_date"] | format_date }}</td>
+                                <td>{{ review["employer_name"] or "-" }}</td>
+                                <td>
+                                    <span class="status-badge {{ review['review_status'] }}">
+                                        {{ review["review_status"].replace("_", " ").title() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if review["review_status"] in ["draft", "rejected"] %}
+                                        <a class="table-action" href="{{ url_for('student.edit_periodic_review', review_id=review['id']) }}">Edit</a>
+                                    {% else %}
+                                        <a class="table-action" href="{{ url_for('student.view_periodic_review', review_id=review['id']) }}">View</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    {% else %}
+        <p>No periodic reviews yet.</p>
+    {% endif %}
+</div>
+
+{% else %}
+    <p>No student profile found.</p>
+{% endif %}
+
+<style>
+.dashboard-selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-selector-card {
+    border: none;
+    border-radius: 14px;
+    padding: 1.25rem;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    font: inherit;
+    width: 100%;
+}
+
+.dashboard-selector-card:hover {
+    transform: translateY(-2px);
+}
+
+.dashboard-selector-card.active {
+    outline: 3px solid rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.dashboard-selector-title {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+}
+
+.dashboard-selector-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.dashboard-selector-mini {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    padding: 0.75rem;
+}
+
+.dashboard-selector-mini small {
+    display: block;
+    margin-bottom: 0.2rem;
+    opacity: 0.9;
+}
+
+.dashboard-selector-mini strong {
+    font-size: 1.15rem;
+}
+
+.dashboard-view-all-btn.active {
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+
+.dashboard-section-hidden {
+    display: none;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".dashboard-selector-card");
+    const viewAllButton = document.querySelector(".dashboard-view-all-btn");
+
+    const sections = {
+        timesheets: document.getElementById("timesheets-section"),
+        learning: document.getElementById("learning-section"),
+        exams: document.getElementById("exams-section"),
+        reviews: document.getElementById("reviews-section")
+    };
+
+    function clearActiveState() {
+        cards.forEach(card => card.classList.remove("active"));
+        if (viewAllButton) {
+            viewAllButton.classList.remove("active");
+        }
+    }
+
+    function showAllSections() {
+        Object.values(sections).forEach(section => {
+            if (section) {
+                section.classList.remove("dashboard-section-hidden");
+            }
+        });
+
+        clearActiveState();
+
+        if (viewAllButton) {
+            viewAllButton.classList.add("active");
+        }
+    }
+
+    function showOnlySection(target) {
+        Object.entries(sections).forEach(([key, section]) => {
+            if (!section) return;
+
+            if (key === target) {
+                section.classList.remove("dashboard-section-hidden");
+            } else {
+                section.classList.add("dashboard-section-hidden");
+            }
+        });
+
+        clearActiveState();
+
+        const activeCard = document.querySelector(`.dashboard-selector-card[data-target="${target}"]`);
+        if (activeCard) {
+            activeCard.classList.add("active");
+        }
+    }
+
+    cards.forEach(card => {
+        card.addEventListener("click", function () {
+            showOnlySection(this.dataset.target);
+        });
+    });
+
+    if (viewAllButton) {
+        viewAllButton.addEventListener("click", function () {
+            showAllSections();
+        });
+    }
+
+    showAllSections();
+});
+</script>
+
+{% endblock %}

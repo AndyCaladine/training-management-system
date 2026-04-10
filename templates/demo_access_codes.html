@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Demo Access Codes{% endblock %}
+
+{% block content %}
+<h2>Demo Access Codes</h2>
+
+<p>
+    This is a demonstration application. Use the access codes below for testing registration flows.
+    This page lists all student and employer access codes currently stored in the demo system,
+    including inactive or expired codes where applicable.
+</p>
+
+<h3>Student Access Codes</h3>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Employer</th>
+                <th>Status</th>
+                <th>Expires At</th>
+                <th>Created</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for code in student_codes %}
+            <tr>
+                <td><strong>{{ code.code }}</strong></td>
+                <td>{{ code.company_name }}</td>
+                <td>
+                    {% if code.is_active %}
+                        <span class="status-badge approved">Active</span>
+                    {% else %}
+                        <span class="status-badge rejected">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ code.expires_at or "—" }}</td>
+                <td>{{ code.created_at or "—" }}</td>
+                <td>{{ code.updated_at or "—" }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No student access codes found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3 style="margin-top: 2rem;">Employer Access Codes</h3>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Company</th>
+                <th>Status</th>
+                <th>Expires At</th>
+                <th>Created</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for code in employer_codes %}
+            <tr>
+                <td><strong>{{ code.code }}</strong></td>
+                <td>{{ code.company_name }}</td>
+                <td>
+                    {% if code.is_active %}
+                        <span class="status-badge approved">Active</span>
+                    {% else %}
+                        <span class="status-badge rejected">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ code.expires_at or "—" }}</td>
+                <td>{{ code.created_at or "—" }}</td>
+                <td>{{ code.updated_at or "—" }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No employer access codes found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
