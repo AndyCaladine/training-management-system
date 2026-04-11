@@ -1,6 +1,6 @@
 # 🧠 Dev Log
 
-## 2026-04-11 — Student Profile Enhancements
+## 11-04-2026 — Student Profile Enhancements
 
 ### ✅ What went well
 - Successfully added department, job title, cohort fields
