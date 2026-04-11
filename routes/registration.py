@@ -44,6 +44,8 @@ def register_student():
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password", "")
         route_name = request.form.get("route_name", "").strip()
+        department = request.form.get("department", "").strip()
+        job_title = request.form.get("job_title", "").strip()
         start_date = request.form.get("start_date", "").strip()
         terms_agreed = request.form.get("terms_agreed")
         gdpr_agreed = request.form.get("gdpr_agreed")
@@ -160,6 +162,10 @@ def register_student():
                 except ValueError:
                     errors.append("Agreement start date is not valid.")
 
+            cohort = None
+            if start_date_obj:
+                cohort = start_date_obj.strftime("%b %Y Cohort")
+
             existing_user = None
             if email:
                 existing_user = conn.execute(
@@ -220,6 +226,9 @@ def register_student():
                     student_number,
                     employer_id,
                     route_name,
+                    department,
+                    job_title,
+                    cohort,
                     phone,
                     date_of_birth,
                     address_line_1,
@@ -229,7 +238,7 @@ def register_student():
                     postcode,
                     registration_status
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     user_id,
@@ -238,6 +247,9 @@ def register_student():
                     student_number,
                     employer_id,
                     route_name,
+                    department or None,
+                    job_title or None,
+                    cohort,
                     phone or None,
                     date_of_birth or None,
                     address_line_1 or None,
@@ -360,6 +372,7 @@ def student_access_code_lookup():
         }
     )
 
+
 @registration_bp.route("/register/student/address-lookup", methods=["POST"])
 def student_address_lookup():
     data = request.get_json(silent=True) or {}
@@ -410,10 +423,12 @@ def student_address_lookup():
         "addresses": formatted_addresses
     })
 
+
 @registration_bp.route("/register/demo-postcodes")
 def demo_postcodes():
     sorted_addresses = sorted(DEMO_ADDRESSES, key=lambda x: x["postcode"])
     return render_template("demo_postcodes.html", addresses=sorted_addresses)
+
 
 @registration_bp.route("/register/demo-access-codes")
 def demo_access_codes():
@@ -456,6 +471,7 @@ def demo_access_codes():
         student_codes=student_codes,
         employer_codes=employer_codes
     )
+
 
 @registration_bp.route("/register/employer", methods=["GET", "POST"])
 def register_employer():

@@ -243,6 +243,9 @@ def change_details():
                     s.postcode,
                     s.student_number,
                     s.route_name,
+                    s.department,
+                    s.job_title,
+                    s.cohort,
                     u.email
                 FROM students s
                 JOIN users u ON s.user_id = u.id
@@ -263,6 +266,8 @@ def change_details():
                 town_city = request.form.get("town_city", "").strip()
                 county = request.form.get("county", "").strip()
                 postcode = request.form.get("postcode", "").strip()
+                department = request.form.get("department", "").strip()
+                job_title = request.form.get("job_title", "").strip()
 
                 errors = []
 
@@ -292,6 +297,7 @@ def change_details():
                         "date_of_birth": user_details["date_of_birth"],
                         "student_number": user_details["student_number"],
                         "route_name": user_details["route_name"],
+                        "cohort": user_details["cohort"],
                         "email": email,
                         "phone": phone,
                         "address_line_1": address_line_1,
@@ -299,6 +305,8 @@ def change_details():
                         "town_city": town_city,
                         "county": county,
                         "postcode": postcode,
+                        "department": department,
+                        "job_title": job_title,
                     }
 
                     return render_template(
@@ -326,6 +334,8 @@ def change_details():
                         town_city = ?,
                         county = ?,
                         postcode = ?,
+                        department = ?,
+                        job_title = ?,
                         updated_at = CURRENT_TIMESTAMP
                     WHERE user_id = ?
                     """,
@@ -336,6 +346,8 @@ def change_details():
                         town_city or None,
                         county or None,
                         postcode or None,
+                        department or None,
+                        job_title or None,
                         user_id,
                     )
                 )
@@ -362,6 +374,7 @@ def change_details():
         role=role,
         user_details=user_details
     )
+
 
 @app.route("/change-password", methods=["GET", "POST"])
 def change_password():

@@ -1007,6 +1007,9 @@ document.addEventListener("DOMContentLoaded", function () {
     bindLiveText("contact_name", "summary-contact-name");
     bindLiveText("contact_email", "summary-contact-email");
 
+    bindLiveText("department", "summary-department");
+    bindLiveText("job_title", "summary-job-title"); 
+
     const postcode = document.getElementById("postcode");
     const findAddressBtn = document.getElementById("change-details-find-address-btn");
     const addressSelect = document.getElementById("change-details-address-select");

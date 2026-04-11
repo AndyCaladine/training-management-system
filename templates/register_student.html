@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Student Registration{% endblock %}
+
 {% block content %}
 <div class="register-page">
     <div class="register-layout">
@@ -79,6 +81,26 @@
                                 id="phone"
                                 name="phone"
                                 value="{{ form_data.phone if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="department">Department</label>
+                            <input
+                                type="text"
+                                id="department"
+                                name="department"
+                                value="{{ form_data.department if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="job_title">Job Title</label>
+                            <input
+                                type="text"
+                                id="job_title"
+                                name="job_title"
+                                value="{{ form_data.job_title if form_data else '' }}"
                             >
                         </div>
                     </div>
@@ -240,12 +262,22 @@
                     <div class="form-grid two-col account-password-grid">
                         <div class="form-field">
                             <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                            >
                         </div>
 
                         <div class="form-field">
                             <label for="confirm_password">Confirm Password</label>
-                            <input type="password" id="confirm_password" name="confirm_password" required>
+                            <input
+                                type="password"
+                                id="confirm_password"
+                                name="confirm_password"
+                                required
+                            >
                         </div>
                     </div>
                 </div>
@@ -256,7 +288,12 @@
                     <div class="form-grid two-col">
                         <div class="form-field">
                             <label for="employer_name">Employer / Training Organisation</label>
-                            <input type="text" id="employer_name" name="employer_name" disabled>
+                            <input
+                                type="text"
+                                id="employer_name"
+                                name="employer_name"
+                                disabled
+                            >
                             <small>This will be populated automatically from your access code.</small>
                         </div>
 
@@ -393,7 +430,7 @@
                     </p>
                 </div>
             </div>
-
+DEMO-STU-2026
             <div class="scroll-doc-box accent-orange">
                 <h3>Student Data Notice</h3>
                 <div class="scroll-doc" id="gdpr-scroll-box">

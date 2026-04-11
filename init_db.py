@@ -62,11 +62,45 @@ def init_database():
     connection.execute(
         """
         INSERT INTO students (
-            user_id, first_name, last_name, student_number, employer_id, route_name, registration_status
+            user_id,
+            first_name,
+            last_name,
+            student_number,
+            employer_id,
+            route_name,
+            department,
+            job_title,
+            cohort,
+            phone,
+            date_of_birth,
+            address_line_1,
+            address_line_2,
+            town_city,
+            county,
+            postcode,
+            registration_status
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
-        (student_user_id, "Bob", "Jones", "STU1001", employer_id, "Standard Route", "active")
+        (
+            student_user_id,
+            "Bob",
+            "Jones",
+            "STU1001",
+            employer_id,
+            "Standard Route",
+            "Finance",
+            "Trainee Accountant",
+            "Apr 2026 Cohort",
+            "07123 456789",
+            "2001-06-14",
+            "12 Market Street",
+            "Flat 2",
+            "Northampton",
+            "Northamptonshire",
+            "NN1 1AA",
+            "active"
+        )
     )
 
     student_id = connection.execute(

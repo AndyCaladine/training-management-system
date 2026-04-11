@@ -63,7 +63,7 @@
                                 <small>This is a system-generated identifier.</small>
                             </div>
 
-                            <div class="form-field form-field-full">
+                            <div class="form-field">
                                 <label for="route_name_display">Training Route</label>
                                 <input
                                     type="text"
@@ -72,6 +72,17 @@
                                     disabled
                                 >
                                 <small>This is managed by your training provider.</small>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="cohort_display">Cohort</label>
+                                <input
+                                    type="text"
+                                    id="cohort_display"
+                                    value="{{ user_details.cohort or '' }}"
+                                    disabled
+                                >
+                                <small>This is set automatically from your training start date.</small>
                             </div>
                         </div>
                     </div>
@@ -98,6 +109,26 @@
                                     id="phone"
                                     name="phone"
                                     value="{{ user_details.phone or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="department">Department</label>
+                                <input
+                                    type="text"
+                                    id="department"
+                                    name="department"
+                                    value="{{ user_details.department or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="job_title">Job Title</label>
+                                <input
+                                    type="text"
+                                    id="job_title"
+                                    name="job_title"
+                                    value="{{ user_details.job_title or '' }}"
                                 >
                             </div>
 
@@ -178,6 +209,7 @@
                             </div>
                         </div>
                     </div>
+
                 {% elif role == "employer" %}
                     <div class="card register-card card-account">
                         <h2>Organisation Details</h2>
@@ -241,11 +273,14 @@
                     <div class="live-summary">
                         <p><strong>Email:</strong><br><span id="summary-email">{{ user_details.email or '—' }}</span></p>
                         <p><strong>Phone:</strong><br><span id="summary-phone">{{ user_details.phone or '—' }}</span></p>
+                        <p><strong>Department:</strong><br><span id="summary-department">{{ user_details.department or '—' }}</span></p>
+                        <p><strong>Job Title:</strong><br><span id="summary-job-title">{{ user_details.job_title or '—' }}</span></p>
                         <p><strong>Address Line 1:</strong><br><span id="summary-address-line-1">{{ user_details.address_line_1 or '—' }}</span></p>
                         <p><strong>Address Line 2:</strong><br><span id="summary-address-line-2">{{ user_details.address_line_2 or '—' }}</span></p>
                         <p><strong>Town / City:</strong><br><span id="summary-town-city">{{ user_details.town_city or '—' }}</span></p>
                         <p><strong>County:</strong><br><span id="summary-county">{{ user_details.county or '—' }}</span></p>
                         <p><strong>Postcode:</strong><br><span id="summary-postcode">{{ user_details.postcode or '—' }}</span></p>
+                        <p><strong>Cohort:</strong><br><span>{{ user_details.cohort or '—' }}</span></p>
                     </div>
                 {% elif role == "employer" %}
                     <div class="live-summary">
@@ -258,15 +293,14 @@
             <div class="agreement-preview-box accent-purple">
                 <h3>Before You Save</h3>
                 <p>
-                    Check that your updated contact details are correct. These changes will be saved to your account immediately.
+                    Check that your updated details are correct. These changes will be saved to your account immediately.
                 </p>
                 <p>
-                    If you need to correct your name, date of birth, or training route, please contact your training provider or back-office team.
+                    If you need to correct your name, date of birth, training route, or cohort, please contact your training provider or back-office team.
                 </p>
             </div>
         </aside>
 
     </div>
 </div>
-
 {% endblock %}
