@@ -14,7 +14,7 @@ Extending student profile to support real-world organisational data (department,
 - Data not saving from frontend
 - JS not binding values correctly to form submission
 
-### 🔧 Solution
+### 🔧 How I fixed it
 - Added debug logging in Flask
 - Verified request.form values
 - Fixed missing input name attributes
