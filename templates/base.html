@@ -20,15 +20,32 @@
                 </div>
 
                 <div class="header-right">
-                    {% if request.endpoint != 'student_dashboard' %}
-                        <a href="{{ url_for('student.student_dashboard') }}" class="nav-button secondary">
-                            Home
+                    {% if session.get('user_id') %}
+
+                        {% if request.endpoint != 'student.student_dashboard' %}
+                            <a href="{{ url_for('student.student_dashboard') }}" class="nav-button secondary">
+                                Dashboard
+                            </a>
+                        {% endif %}
+
+                        <div class="user-menu">
+                            <button class="nav-button secondary user-menu-toggle" type="button">
+                                Hi {{ session.get('user_name', 'User') }} ▾
+                            </button>
+
+                            <div class="user-dropdown">
+                                <a href="{{ url_for('student.student_dashboard') }}">Dashboard</a>
+                                <a href="{{ url_for('change_details') }}">Change Your Details</a>
+                                <a href="{{ url_for('change_password') }}">Change Your Password</a>
+                                <a href="{{ url_for('logout') }}">Logout</a>
+                            </div>
+                        </div>
+
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="nav-button secondary">
+                            Login
                         </a>
                     {% endif %}
-
-                    <a href="{{ url_for('logout') }}" class="nav-button danger">
-                        Logout
-                    </a>
                 </div>
             </header>
 

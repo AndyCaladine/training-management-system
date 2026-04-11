@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Change Your Details{% endblock %}
+
+{% block content %}
+<div class="register-page">
+    <div class="register-layout">
+
+        <section class="register-left">
+            <h1>Change Your Details</h1>
+            <p class="register-intro">
+                Update your contact details below. Some personal and programme details are managed by your training provider and cannot be changed here.
+            </p>
+
+            <form method="POST" id="change-details-form">
+
+                {% if role == "student" %}
+                    <div class="card register-card card-account">
+                        <h2>Your Details</h2>
+
+                        <div class="form-grid two-col">
+                            <div class="form-field">
+                                <label for="first_name_display">First Name</label>
+                                <input
+                                    type="text"
+                                    id="first_name_display"
+                                    value="{{ user_details.first_name or '' }}"
+                                    disabled
+                                >
+                                <small>This is managed by your training provider.</small>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="last_name_display">Last Name</label>
+                                <input
+                                    type="text"
+                                    id="last_name_display"
+                                    value="{{ user_details.last_name or '' }}"
+                                    disabled
+                                >
+                                <small>This is managed by your training provider.</small>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="date_of_birth_display">Date of Birth</label>
+                                <input
+                                    type="text"
+                                    id="date_of_birth_display"
+                                    value="{{ user_details.date_of_birth or '' }}"
+                                    disabled
+                                >
+                                <small>This is managed by your training provider.</small>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="student_number_display">Student Number</label>
+                                <input
+                                    type="text"
+                                    id="student_number_display"
+                                    value="{{ user_details.student_number or '' }}"
+                                    disabled
+                                >
+                                <small>This is a system-generated identifier.</small>
+                            </div>
+
+                            <div class="form-field form-field-full">
+                                <label for="route_name_display">Training Route</label>
+                                <input
+                                    type="text"
+                                    id="route_name_display"
+                                    value="{{ user_details.route_name or '' }}"
+                                    disabled
+                                >
+                                <small>This is managed by your training provider.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card register-card card-access">
+                        <h2>Contact Details</h2>
+
+                        <div class="form-grid two-col">
+                            <div class="form-field">
+                                <label for="email">Email Address</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="{{ user_details.email or '' }}"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="phone">Phone Number</label>
+                                <input
+                                    type="text"
+                                    id="phone"
+                                    name="phone"
+                                    value="{{ user_details.phone or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="postcode">Postcode</label>
+                                <input
+                                    type="text"
+                                    id="postcode"
+                                    name="postcode"
+                                    value="{{ user_details.postcode or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field address-search-field">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn-secondary" id="change-details-find-address-btn">
+                                    Find Address
+                                </button>
+                            </div>
+
+                            <div class="form-field form-field-full">
+                                <small>
+                                    This is a demo postcode lookup.
+                                    <a href="{{ url_for('registration.demo_postcodes') }}" target="_blank" rel="noopener noreferrer">
+                                        View demo postcodes and addresses
+                                    </a>,
+                                    or enter your address manually below.
+                                </small>
+                            </div>
+
+                            <div class="form-field form-field-full">
+                                <label for="change-details-address-select">Select Address</label>
+                                <select id="change-details-address-select">
+                                    <option value="">Select an address</option>
+                                </select>
+                                <small>Choose an address from the search results, or edit the fields manually below.</small>
+                                <p id="change-details-address-lookup-message" class="field-message"></p>
+                            </div>
+
+                            <div class="form-field form-field-full">
+                                <label for="address_line_1">Address Line 1</label>
+                                <input
+                                    type="text"
+                                    id="address_line_1"
+                                    name="address_line_1"
+                                    value="{{ user_details.address_line_1 or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field form-field-full">
+                                <label for="address_line_2">Address Line 2</label>
+                                <input
+                                    type="text"
+                                    id="address_line_2"
+                                    name="address_line_2"
+                                    value="{{ user_details.address_line_2 or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="town_city">Town / City</label>
+                                <input
+                                    type="text"
+                                    id="town_city"
+                                    name="town_city"
+                                    value="{{ user_details.town_city or '' }}"
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="county">County / State / Region</label>
+                                <input
+                                    type="text"
+                                    id="county"
+                                    name="county"
+                                    value="{{ user_details.county or '' }}"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                {% elif role == "employer" %}
+                    <div class="card register-card card-account">
+                        <h2>Organisation Details</h2>
+
+                        <div class="form-grid two-col">
+                            <div class="form-field form-field-full">
+                                <label for="company_name_display">Company Name</label>
+                                <input
+                                    type="text"
+                                    id="company_name_display"
+                                    value="{{ user_details.company_name or '' }}"
+                                    disabled
+                                >
+                                <small>This is managed by your organisation.</small>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contact_name">Contact Name</label>
+                                <input
+                                    type="text"
+                                    id="contact_name"
+                                    name="contact_name"
+                                    value="{{ user_details.contact_name or '' }}"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-field">
+                                <label for="contact_email">Contact Email</label>
+                                <input
+                                    type="email"
+                                    id="contact_email"
+                                    name="contact_email"
+                                    value="{{ user_details.contact_email or '' }}"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card register-card card-declarations">
+                    <h2>Save Changes</h2>
+                    <p class="register-intro">
+                        Please review your updated details in the summary before saving.
+                    </p>
+
+                    <button type="submit" class="btn-primary register-submit-btn">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <aside class="register-right">
+            <div class="live-summary-card accent-blue">
+                <h2>Change Summary</h2>
+
+                {% if role == "student" %}
+                    <div class="live-summary">
+                        <p><strong>Email:</strong><br><span id="summary-email">{{ user_details.email or '—' }}</span></p>
+                        <p><strong>Phone:</strong><br><span id="summary-phone">{{ user_details.phone or '—' }}</span></p>
+                        <p><strong>Address Line 1:</strong><br><span id="summary-address-line-1">{{ user_details.address_line_1 or '—' }}</span></p>
+                        <p><strong>Address Line 2:</strong><br><span id="summary-address-line-2">{{ user_details.address_line_2 or '—' }}</span></p>
+                        <p><strong>Town / City:</strong><br><span id="summary-town-city">{{ user_details.town_city or '—' }}</span></p>
+                        <p><strong>County:</strong><br><span id="summary-county">{{ user_details.county or '—' }}</span></p>
+                        <p><strong>Postcode:</strong><br><span id="summary-postcode">{{ user_details.postcode or '—' }}</span></p>
+                    </div>
+                {% elif role == "employer" %}
+                    <div class="live-summary">
+                        <p><strong>Contact Name:</strong><br><span id="summary-contact-name">{{ user_details.contact_name or '—' }}</span></p>
+                        <p><strong>Contact Email:</strong><br><span id="summary-contact-email">{{ user_details.contact_email or '—' }}</span></p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="agreement-preview-box accent-purple">
+                <h3>Before You Save</h3>
+                <p>
+                    Check that your updated contact details are correct. These changes will be saved to your account immediately.
+                </p>
+                <p>
+                    If you need to correct your name, date of birth, or training route, please contact your training provider or back-office team.
+                </p>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+{% endblock %}

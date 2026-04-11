@@ -50,12 +50,20 @@ def home():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"].strip()
+        email = request.form["email"].strip().lower()
         password = request.form["password"]
 
         conn = get_db_connection()
         user = conn.execute(
-            "SELECT * FROM users WHERE email = ? AND is_active = 1",
+            """
+            SELECT u.*,
+                s.first_name AS student_first_name,
+                e.contact_name AS employer_contact_name
+            FROM users u
+            LEFT JOIN students s ON u.id = s.user_id
+            LEFT JOIN employers e ON u.id = e.user_id
+            WHERE u.email = ? AND u.is_active = 1
+            """,
             (email,)
         ).fetchone()
         conn.close()
@@ -64,12 +72,17 @@ def login():
             session["user_id"] = user["id"]
             session["email"] = user["email"]
             session["role"] = user["role"]
+            session["user_name"] = (
+                user["student_first_name"]
+                or user["employer_contact_name"]
+                or user["email"]
+            )
 
-            flash("Login successful", "success")
+            flash("Logged in successfully.", "success")
             return redirect(url_for("home"))
-
-        flash("Incorrect email or password. Please check your details and try again. If you do not yet have an account, please register below.", "error")
-
+        
+        flash("Incorrect emauil or password. Please check your details and try again. If you do not have an account, please register below.", "error"
+              )
     return render_template("login.html")
 
 @app.route("/forgot-password", methods=["GET", "POST"])
@@ -202,6 +215,246 @@ def reset_password(token):
 
     conn.close()
     return render_template("reset_password.html", token=token)
+
+@app.route("/change-details", methods=["GET", "POST"])
+def change_details():
+    if "user_id" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    user_id = session["user_id"]
+    role = session["role"]
+
+    conn = get_db_connection()
+
+    try:
+        if role == "student":
+            user_details = conn.execute(
+                """
+                SELECT
+                    s.first_name,
+                    s.last_name,
+                    s.phone,
+                    s.date_of_birth,
+                    s.address_line_1,
+                    s.address_line_2,
+                    s.town_city,
+                    s.county,
+                    s.postcode,
+                    s.student_number,
+                    s.route_name,
+                    u.email
+                FROM students s
+                JOIN users u ON s.user_id = u.id
+                WHERE s.user_id = ?
+                """,
+                (user_id,)
+            ).fetchone()
+
+            if not user_details:
+                flash("Student account details could not be found.", "error")
+                return redirect(url_for("home"))
+
+            if request.method == "POST":
+                email = request.form.get("email", "").strip().lower()
+                phone = request.form.get("phone", "").strip()
+                address_line_1 = request.form.get("address_line_1", "").strip()
+                address_line_2 = request.form.get("address_line_2", "").strip()
+                town_city = request.form.get("town_city", "").strip()
+                county = request.form.get("county", "").strip()
+                postcode = request.form.get("postcode", "").strip()
+
+                errors = []
+
+                if not email:
+                    errors.append("Email address is required.")
+
+                if email:
+                    existing_email_user = conn.execute(
+                        """
+                        SELECT id
+                        FROM users
+                        WHERE email = ? AND id != ?
+                        """,
+                        (email, user_id)
+                    ).fetchone()
+
+                    if existing_email_user:
+                        errors.append("That email address is already in use.")
+
+                if errors:
+                    for error in errors:
+                        flash(error, "error")
+
+                    form_data = {
+                        "first_name": user_details["first_name"],
+                        "last_name": user_details["last_name"],
+                        "date_of_birth": user_details["date_of_birth"],
+                        "student_number": user_details["student_number"],
+                        "route_name": user_details["route_name"],
+                        "email": email,
+                        "phone": phone,
+                        "address_line_1": address_line_1,
+                        "address_line_2": address_line_2,
+                        "town_city": town_city,
+                        "county": county,
+                        "postcode": postcode,
+                    }
+
+                    return render_template(
+                        "change_details.html",
+                        role=role,
+                        user_details=form_data
+                    )
+
+                conn.execute(
+                    """
+                    UPDATE users
+                    SET email = ?
+                    WHERE id = ?
+                    """,
+                    (email, user_id)
+                )
+
+                conn.execute(
+                    """
+                    UPDATE students
+                    SET
+                        phone = ?,
+                        address_line_1 = ?,
+                        address_line_2 = ?,
+                        town_city = ?,
+                        county = ?,
+                        postcode = ?,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = ?
+                    """,
+                    (
+                        phone or None,
+                        address_line_1 or None,
+                        address_line_2 or None,
+                        town_city or None,
+                        county or None,
+                        postcode or None,
+                        user_id,
+                    )
+                )
+
+                conn.commit()
+                session["email"] = email
+
+                flash("Your details have been updated successfully.", "success")
+                return redirect(url_for("home"))
+
+        elif role == "employer":
+            flash("Employer change details is still to be built.", "error")
+            return redirect(url_for("home"))
+
+        else:
+            flash("This account type cannot edit details here.", "error")
+            return redirect(url_for("home"))
+
+    finally:
+        conn.close()
+
+    return render_template(
+        "change_details.html",
+        role=role,
+        user_details=user_details
+    )
+
+@app.route("/change-password", methods=["GET", "POST"])
+def change_password():
+    if "user_id" not in session:
+        flash("Please log in to access this page.", "error")
+        return redirect(url_for("login"))
+
+    user_id = session["user_id"]
+    conn = get_db_connection()
+
+    try:
+        user = conn.execute(
+            """
+            SELECT id, password
+            FROM users
+            WHERE id = ? AND is_active = 1
+            """,
+            (user_id,)
+        ).fetchone()
+
+        if not user:
+            flash("Your account could not be found.", "error")
+            return redirect(url_for("home"))
+
+        if request.method == "POST":
+            current_password = request.form.get("current_password", "")
+            new_password = request.form.get("new_password", "")
+            confirm_password = request.form.get("confirm_password", "")
+
+            errors = []
+
+            if not current_password:
+                errors.append("Current password is required.")
+
+            if not new_password:
+                errors.append("New password is required.")
+
+            if not confirm_password:
+                errors.append("Please confirm your new password.")
+
+            if current_password and not check_password_hash(user["password"], current_password):
+                errors.append("Your current password is incorrect.")
+
+            if new_password and len(new_password) < 8:
+                errors.append("Password must be at least 8 characters long.")
+
+            if new_password and not any(char.islower() for char in new_password):
+                errors.append("Password must include at least one lowercase letter.")
+
+            if new_password and not any(char.isupper() for char in new_password):
+                errors.append("Password must include at least one uppercase letter.")
+
+            if new_password and not any(char.isdigit() for char in new_password):
+                errors.append("Password must include at least one number.")
+
+            if new_password and not any(not char.isalnum() for char in new_password):
+                errors.append("Password must include at least one special character.")
+
+            if new_password and confirm_password and new_password != confirm_password:
+                errors.append("New password and confirm password do not match.")
+
+            if current_password and not check_password_hash(user["password"], current_password):
+                errors.append("Your current password is incorrect.")
+
+            if new_password and check_password_hash(user["password"], new_password):
+                errors.append("Your new password must be different from your current password.")
+
+            if errors:
+                for error in errors:
+                    flash(error, "error")
+
+                return render_template("change_password.html")
+
+            password_hash = generate_password_hash(new_password)
+
+            conn.execute(
+                """
+                UPDATE users
+                SET password = ?
+                WHERE id = ?
+                """,
+                (password_hash, user_id)
+            )
+            conn.commit()
+
+            flash("Your password has been changed successfully.", "success")
+            return redirect(url_for("home"))
+
+    finally:
+        conn.close()
+
+    return render_template("change_password.html")
+        
     
 
 @app.route("/logout")

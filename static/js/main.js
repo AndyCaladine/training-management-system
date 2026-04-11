@@ -974,3 +974,143 @@ document.addEventListener("DOMContentLoaded", function () {
     updatePreview();
     updateSignature();
 });
+
+// Change Details live summary and address lookup
+document.addEventListener("DOMContentLoaded", function () {
+    const changeDetailsForm = document.getElementById("change-details-form");
+
+    if (!changeDetailsForm) return;
+
+    function bindLiveText(inputId, outputId) {
+        const input = document.getElementById(inputId);
+        const output = document.getElementById(outputId);
+
+        if (!input || !output) return;
+
+        function updateValue() {
+            output.textContent = input.value.trim() || "—";
+        }
+
+        input.addEventListener("input", updateValue);
+        input.addEventListener("change", updateValue);
+        updateValue();
+    }
+
+    bindLiveText("email", "summary-email");
+    bindLiveText("phone", "summary-phone");
+    bindLiveText("address_line_1", "summary-address-line-1");
+    bindLiveText("address_line_2", "summary-address-line-2");
+    bindLiveText("town_city", "summary-town-city");
+    bindLiveText("county", "summary-county");
+    bindLiveText("postcode", "summary-postcode");
+
+    bindLiveText("contact_name", "summary-contact-name");
+    bindLiveText("contact_email", "summary-contact-email");
+
+    const postcode = document.getElementById("postcode");
+    const findAddressBtn = document.getElementById("change-details-find-address-btn");
+    const addressSelect = document.getElementById("change-details-address-select");
+    const addressLookupMessage = document.getElementById("change-details-address-lookup-message");
+
+    const addressLine1 = document.getElementById("address_line_1");
+    const addressLine2 = document.getElementById("address_line_2");
+    const townCity = document.getElementById("town_city");
+    const county = document.getElementById("county");
+
+    function populateAddressFields(address) {
+        if (!address) return;
+
+        if (addressLine1) {
+            addressLine1.value = address.address_line_1 || "";
+            addressLine1.dispatchEvent(new Event("input"));
+        }
+
+        if (addressLine2) {
+            addressLine2.value = address.address_line_2 || "";
+            addressLine2.dispatchEvent(new Event("input"));
+        }
+
+        if (townCity) {
+            townCity.value = address.town_city || "";
+            townCity.dispatchEvent(new Event("input"));
+        }
+
+        if (county) {
+            county.value = address.county || "";
+            county.dispatchEvent(new Event("input"));
+        }
+
+        if (postcode) {
+            postcode.value = address.postcode || postcode.value || "";
+            postcode.dispatchEvent(new Event("input"));
+        }
+    }
+
+    async function lookupDemoAddresses() {
+        if (!postcode || !addressSelect || !addressLookupMessage) return;
+
+        const postcodeValue = postcode.value.trim();
+
+        addressLookupMessage.textContent = "";
+        addressLookupMessage.classList.remove("success", "error");
+        addressSelect.innerHTML = '<option value="">Select an address</option>';
+
+        if (!postcodeValue) {
+            addressLookupMessage.textContent = "Please enter a postcode.";
+            addressLookupMessage.classList.add("error");
+            return;
+        }
+
+        try {
+            const response = await fetch("/register/student/address-lookup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ postcode: postcodeValue })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                addressLookupMessage.textContent =
+                    result.message || "No demo addresses found for that postcode.";
+                addressLookupMessage.classList.add("error");
+                return;
+            }
+
+            result.addresses.forEach((address, index) => {
+                const option = document.createElement("option");
+                option.value = String(index);
+                option.textContent = address.label;
+                option.dataset.address = JSON.stringify(address);
+                addressSelect.appendChild(option);
+            });
+
+            addressLookupMessage.textContent =
+                result.message || `${result.addresses.length} address(es) found.`;
+            addressLookupMessage.classList.add("success");
+        } catch (error) {
+            addressLookupMessage.textContent = "Unable to look up demo addresses right now.";
+            addressLookupMessage.classList.add("error");
+        }
+    }
+
+    if (findAddressBtn) {
+        findAddressBtn.addEventListener("click", lookupDemoAddresses);
+    }
+
+    if (addressSelect) {
+        addressSelect.addEventListener("change", function () {
+            const selectedOption = addressSelect.options[addressSelect.selectedIndex];
+            if (!selectedOption || !selectedOption.dataset.address) return;
+
+            try {
+                const address = JSON.parse(selectedOption.dataset.address);
+                populateAddressFields(address);
+            } catch (error) {
+                // no-op
+            }
+        });
+    }
+});

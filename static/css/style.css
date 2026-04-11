@@ -378,38 +378,137 @@ main {
         opacity: 0.95;
     }
 
-/* Header and Nav bar */
+/* =========================================================
+   HEADER / NAVIGATION
+   ========================================================= */
 
-    /* HEADER */
-    .app-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.2rem 2rem;
-        background: #1f2937;
-        color: white;
-    }
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background: #1f2937;
+    color: white;
+}
 
-    .app-title {
-        margin: 0;
-        font-size: 1.4rem;
-        font-weight: 700;
-    }
+.app-title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
 
-    /* NAV BUTTONS */
-    .header-right {
-        display: flex;
-        gap: 0.75rem;
-    }
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
 
-    .nav-button {
-        padding: 0.6rem 1rem;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: all 0.2s ease;
-    }
+.nav-button {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-button.secondary {
+    background: #374151;
+    color: white;
+}
+
+.nav-button.secondary:hover {
+    background: #4b5563;
+}
+
+.nav-button.danger {
+    background: #dc2626;
+    color: white;
+}
+
+.nav-button.danger:hover {
+    background: #b91c1c;
+}
+
+/* ---------- User dropdown ---------- */
+
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 220px;
+    margin-top: 0.2rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.user-menu::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    height: 12px;
+}
+
+.user-menu:hover .user-dropdown,
+.user-menu:focus-within .user-dropdown {
+    display: block;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 0.85rem 1rem;
+    background: white;
+    color: #111827;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.user-dropdown a:hover,
+.user-dropdown a:focus {
+    background: #f3e8ff;
+    color: #6d28d9;
+    outline: none;
+}
+
+/* ---------- User menu trigger override ---------- */
+
+.user-menu .user-menu-toggle.nav-button.secondary {
+    background: #2563eb;
+    color: white;
+}
+
+.user-menu .user-menu-toggle.nav-button.secondary:hover,
+.user-menu:hover .user-menu-toggle.nav-button.secondary,
+.user-menu:focus-within .user-menu-toggle.nav-button.secondary {
+    background: #7c3aed;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.user-menu .user-menu-toggle.nav-button.secondary:active {
+    background: #6d28d9;
+    color: white;
+    transform: translateY(0);
+}
+
+
 
     /* Home button */
     .nav-button.secondary {

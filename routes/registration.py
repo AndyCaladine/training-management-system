@@ -291,6 +291,7 @@ def register_student():
             session["user_id"] = user_id
             session["email"] = email
             session["role"] = "student"
+            session["user_name"] = first_name
 
             flash("Account created successfully.", "success")
             return redirect(url_for("student.student_dashboard"))
