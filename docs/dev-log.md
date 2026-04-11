@@ -2,6 +2,9 @@
 
 ## 11-04-2026 — Student Profile Enhancements
 
+### 🧩 Context
+Extending student profile to support real-world organisational data (department, job title, cohort)
+
 ### ✅ What went well
 - Successfully added department, job title, cohort fields
 - End-to-end flow working (form → backend → DB)
@@ -20,3 +23,6 @@
 - Always validate full data flow: UI → backend → DB
 - Debug logs save time vs guessing
 - Frontend issues can silently break backend logic
+
+### 🚀 Impact
+Student records now support richer organisational data and align more closely with real-world training systems.
