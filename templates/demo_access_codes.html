@@ -11,6 +11,11 @@
     including inactive or expired codes where applicable.
 </p>
 
+<p>
+    For employer registration, the access code must be used with a valid work email address that matches
+    one of the allowed email domains shown below.
+</p>
+
 <h3>Student Access Codes</h3>
 <div class="table-wrapper">
     <table>
@@ -57,6 +62,8 @@
                 <th>Code</th>
                 <th>Company</th>
                 <th>Status</th>
+                <th>Usage</th>
+                <th>Allowed Email Domain(s)</th>
                 <th>Expires At</th>
                 <th>Created</th>
                 <th>Updated</th>
@@ -74,13 +81,27 @@
                         <span class="status-badge rejected">Inactive</span>
                     {% endif %}
                 </td>
+                <td>
+                    {% if code.is_single_use %}
+                        Single-use
+                    {% else %}
+                        Reusable
+                    {% endif %}
+                </td>
+                <td>
+                    {% if domains_by_employer.get(code.employer_id) %}
+                        {{ domains_by_employer[code.employer_id] | join(", ") }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
                 <td>{{ code.expires_at or "—" }}</td>
                 <td>{{ code.created_at or "—" }}</td>
                 <td>{{ code.updated_at or "—" }}</td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="6">No employer access codes found.</td>
+                <td colspan="8">No employer access codes found.</td>
             </tr>
             {% endfor %}
         </tbody>

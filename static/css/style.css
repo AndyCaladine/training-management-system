@@ -1282,3 +1282,17 @@ main {
     .field-message.error {
         color: #b91c1c;
     }
+
+    .field-message {
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Andy-approved feedback system 👇 */
+.field-message.success {
+    color: #2e7d32; /* nice green */
+}
+
+.field-message.error {
+    color: #c62828; /* nice red */
+}

@@ -56,12 +56,19 @@ def login():
         conn = get_db_connection()
         user = conn.execute(
             """
-            SELECT u.*,
+            SELECT
+                u.*,
                 s.first_name AS student_first_name,
-                e.contact_name AS employer_contact_name
+                ec.first_name AS employer_first_name,
+                ec.last_name AS employer_last_name,
+                e.company_name AS employer_company_name
             FROM users u
-            LEFT JOIN students s ON u.id = s.user_id
-            LEFT JOIN employers e ON u.id = e.user_id
+            LEFT JOIN students s
+                ON u.id = s.user_id
+            LEFT JOIN employer_contacts ec
+                ON u.id = ec.user_id
+            LEFT JOIN employers e
+                ON ec.employer_id = e.id
             WHERE u.email = ? AND u.is_active = 1
             """,
             (email,)
@@ -72,17 +79,21 @@ def login():
             session["user_id"] = user["id"]
             session["email"] = user["email"]
             session["role"] = user["role"]
+
             session["user_name"] = (
                 user["student_first_name"]
-                or user["employer_contact_name"]
+                or user["employer_first_name"]
                 or user["email"]
             )
 
             flash("Logged in successfully.", "success")
             return redirect(url_for("home"))
-        
-        flash("Incorrect emauil or password. Please check your details and try again. If you do not have an account, please register below.", "error"
-              )
+
+        flash(
+            "Incorrect email or password. Please check your details and try again. If you do not have an account, please register below.",
+            "error",
+        )
+
     return render_template("login.html")
 
 @app.route("/forgot-password", methods=["GET", "POST"])

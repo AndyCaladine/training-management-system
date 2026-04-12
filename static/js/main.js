@@ -1117,3 +1117,236 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+// Employer Registration logic and light live feedback
+document.addEventListener("DOMContentLoaded", function () {
+    const employerRegistrationForm = document.getElementById("employer-registration-form");
+
+    if (!employerRegistrationForm) return;
+
+    const accessCode = document.getElementById("access_code");
+    const accessCodeMessage = document.getElementById("access-code-message");
+    const employerName = document.getElementById("employer_name");
+
+    const firstName = document.getElementById("first_name");
+    const lastName = document.getElementById("last_name");
+
+    const termsCheckbox = document.getElementById("terms_agreed");
+    const gdprCheckbox = document.getElementById("gdpr_agreed");
+
+    const termsStatus = document.getElementById("terms-status");
+    const gdprStatus = document.getElementById("gdpr-status");
+
+    const termsScrollBox = document.querySelector(".scroll-doc-box .scroll-doc");
+    const gdprScrollBox = document.querySelectorAll(".scroll-doc-box .scroll-doc")[1];
+
+    async function lookupEmployerAccessCode() {
+        if (!accessCode || !accessCodeMessage || !employerName) return;
+
+        const code = accessCode.value.trim();
+
+        employerName.value = "";
+        accessCodeMessage.textContent = "";
+        accessCodeMessage.classList.remove("success", "error");
+
+        if (!code) return;
+
+        try {
+            const response = await fetch("/register/employer/access-code-lookup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ access_code: code })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.valid) {
+                employerName.value = result.employer_name || "";
+                accessCodeMessage.textContent = result.message || "Access code accepted.";
+                accessCodeMessage.classList.add("success");
+            } else {
+                employerName.value = "";
+                accessCodeMessage.textContent = result.message || "Access code not recognised.";
+                accessCodeMessage.classList.add("error");
+            }
+        } catch (error) {
+            employerName.value = "";
+            accessCodeMessage.textContent = "Unable to validate access code right now.";
+            accessCodeMessage.classList.add("error");
+        }
+    }
+
+    function enableOnScroll(scrollBox, checkbox, statusEl, completeText) {
+        if (!scrollBox || !checkbox || !statusEl) return;
+
+        scrollBox.addEventListener("scroll", function () {
+            const reachedBottom =
+                scrollBox.scrollTop + scrollBox.clientHeight >= scrollBox.scrollHeight - 5;
+
+            if (reachedBottom) {
+                checkbox.disabled = false;
+                statusEl.textContent = completeText;
+
+                if (checkbox.parentElement) {
+                    checkbox.parentElement.classList.remove("disabled-check");
+                }
+            }
+        });
+    }
+
+    function updateDeclarationStatus() {
+        if (termsStatus && termsCheckbox) {
+            termsStatus.textContent = termsCheckbox.checked ? "Accepted" : "Please review below";
+        }
+
+        if (gdprStatus && gdprCheckbox) {
+            gdprStatus.textContent = gdprCheckbox.checked ? "Accepted" : "Please review below";
+        }
+    }
+
+    if (accessCode) {
+        let accessCodeTimer;
+
+        accessCode.addEventListener("input", function () {
+            clearTimeout(accessCodeTimer);
+
+            accessCodeTimer = setTimeout(() => {
+                lookupEmployerAccessCode();
+            }, 400);
+        });
+
+        accessCode.addEventListener("blur", lookupEmployerAccessCode);
+    }
+
+    [termsCheckbox, gdprCheckbox].forEach((field) => {
+        if (!field) return;
+        field.addEventListener("change", updateDeclarationStatus);
+    });
+
+    // Optional: mirror student behaviour and make users scroll before ticking
+    enableOnScroll(termsScrollBox, termsCheckbox, termsStatus, "Read");
+    enableOnScroll(gdprScrollBox, gdprCheckbox, gdprStatus, "Read");
+
+    updateDeclarationStatus();
+});
+
+// Employer Registration - access code lookup and email builder
+document.addEventListener("DOMContentLoaded", function () {
+    const employerRegistrationForm = document.getElementById("employer-registration-form");
+
+    if (!employerRegistrationForm) return;
+
+    const accessCode = document.getElementById("access_code");
+    const accessCodeMessage = document.getElementById("access-code-message");
+    const employerName = document.getElementById("employer_name");
+
+    const emailUsername = document.getElementById("email_username");
+    const emailDomain = document.getElementById("email_domain");
+    const workEmail = document.getElementById("work_email");
+
+    function resetEmployerAccessFeedback() {
+        if (employerName) employerName.value = "";
+        if (accessCodeMessage) {
+            accessCodeMessage.textContent = "";
+            accessCodeMessage.classList.remove("success", "error");
+        }
+        if (emailDomain) {
+            emailDomain.innerHTML = '<option value="">Select domain</option>';
+            emailDomain.disabled = true;
+        }
+        if (workEmail) {
+            workEmail.value = "";
+        }
+    }
+
+    function populateEmployerDomains(domains) {
+        if (!emailDomain) return;
+
+        emailDomain.innerHTML = '<option value="">Select domain</option>';
+
+        domains.forEach((domain) => {
+            const option = document.createElement("option");
+            option.value = domain;
+            option.textContent = `@${domain}`;
+            emailDomain.appendChild(option);
+        });
+
+        emailDomain.disabled = domains.length === 0;
+    }
+
+    function buildEmployerEmail() {
+        if (!emailUsername || !emailDomain || !workEmail) return;
+
+        const username = emailUsername.value.trim().toLowerCase();
+        const domain = emailDomain.value.trim().toLowerCase();
+
+        if (username && domain) {
+            workEmail.value = `${username}@${domain}`;
+        } else {
+            workEmail.value = "";
+        }
+    }
+
+    async function lookupEmployerAccessCode() {
+        if (!accessCode || !accessCodeMessage || !employerName) return;
+
+        const code = accessCode.value.trim();
+
+        resetEmployerAccessFeedback();
+
+        if (!code) return;
+
+        try {
+            const response = await fetch("/register/employer/access-code-lookup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ access_code: code })
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.valid) {
+                employerName.value = result.employer_name || "";
+                populateEmployerDomains(result.allowed_domains || []);
+                accessCodeMessage.textContent = result.message || "Access code accepted.";
+                accessCodeMessage.classList.add("success");
+            } else {
+                accessCodeMessage.textContent = result.message || "Access code not recognised.";
+                accessCodeMessage.classList.add("error");
+            }
+        } catch (error) {
+            accessCodeMessage.textContent = "Unable to validate access code right now.";
+            accessCodeMessage.classList.add("error");
+        }
+
+        buildEmployerEmail();
+    }
+
+    if (accessCode) {
+        let accessCodeTimer;
+
+        accessCode.addEventListener("input", function () {
+            clearTimeout(accessCodeTimer);
+
+            accessCodeTimer = setTimeout(() => {
+                lookupEmployerAccessCode();
+            }, 400);
+        });
+
+        accessCode.addEventListener("blur", lookupEmployerAccessCode);
+    }
+
+    if (emailUsername) {
+        emailUsername.addEventListener("input", buildEmployerEmail);
+    }
+
+    if (emailDomain) {
+        emailDomain.addEventListener("change", buildEmployerEmail);
+    }
+
+    emailDomain.disabled = true;
+});

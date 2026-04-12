@@ -1,13 +1,314 @@
 {% extends "base.html" %}
 
+{% block title %}Employer Contact Registration{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h2>Employer Contact Registration</h2>
+<div class="register-page">
+    <div class="register-layout">
 
-    <div class="card">
-        <p>This is a demonstration application. Please use fictitious data only.</p>
+        <section class="register-left">
 
-        <p>Employer registration form will go here.</p>
+            <h1>Employer Contact Registration</h1>
+            <p class="register-intro">
+                Create your employer contact account to access and manage student records within this demo application.
+            </p>
+
+            <div class="card register-card card-access">
+                <h2>Access</h2>
+                <div class="form-field">
+                    <label for="access_code">Access Code</label>
+                    <input
+                        type="text"
+                        id="access_code"
+                        name="access_code"
+                        form="employer-registration-form"
+                        value="{{ form_data.access_code if form_data else '' }}"
+                        required
+                    >
+                    <small>
+                        Enter the employer access code provided for this demo registration.
+                        <a href="{{ url_for('registration.demo_access_codes') }}" target="_blank" rel="noopener noreferrer">
+                            View demo access codes
+                        </a>.
+                    </small>
+                    <p id="access-code-message" class="field-message"></p>
+                </div>
+            </div>
+
+            <form method="POST" id="employer-registration-form">
+
+                <div class="card register-card card-account">
+                    <h2>Contact Details</h2>
+
+                    <div class="form-grid two-col">
+                        <div class="form-field">
+                            <label for="first_name">First Name</label>
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                value="{{ form_data.first_name if form_data else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="last_name">Last Name</label>
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                value="{{ form_data.last_name if form_data else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="job_title">Job Title</label>
+                            <input
+                                type="text"
+                                id="job_title"
+                                name="job_title"
+                                value="{{ form_data.job_title if form_data else '' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="department">Department</label>
+                            <input
+                                type="text"
+                                id="department"
+                                name="department"
+                                value="{{ form_data.department if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="employee_reference">Employee Reference</label>
+                            <input
+                                type="text"
+                                id="employee_reference"
+                                name="employee_reference"
+                                value="{{ form_data.employee_reference if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="preferred_contact_method">Preferred Contact Method</label>
+                            <select id="preferred_contact_method" name="preferred_contact_method">
+                                <option value="email"
+                                    {% if not form_data or form_data.preferred_contact_method == "email" %}selected{% endif %}>
+                                    Email
+                                </option>
+                                <option value="phone"
+                                    {% if form_data and form_data.preferred_contact_method == "phone" %}selected{% endif %}>
+                                    Phone
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card register-card card-contact">
+                    <h2>Work Contact Information</h2>
+
+                    <div class="form-grid two-col">
+                        <div class="form-field">
+                            <label for="email_username">Work Email</label>
+                            <input
+                                type="text"
+                                id="email_username"
+                                name="email_username"
+                                placeholder="e.g. john.smith"
+                                required
+                            >
+                            <small>
+                                Enter the first part of your work email address, then select an allowed domain.
+                            </small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email_domain">Email Domain</label>
+                            <select id="email_domain" name="email_domain" required>
+                                <option value="">Select domain</option>
+                            </select>
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <input type="hidden" id="work_email" name="work_email">
+                            <small>
+                                This must be your employer email address. Personal email addresses should not be used.
+                            </small>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="work_phone">Work Phone</label>
+                            <input
+                                type="text"
+                                id="work_phone"
+                                name="work_phone"
+                                value="{{ form_data.work_phone if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="secondary_phone">Secondary Phone</label>
+                            <input
+                                type="text"
+                                id="secondary_phone"
+                                name="secondary_phone"
+                                value="{{ form_data.secondary_phone if form_data else '' }}"
+                            >
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <label for="employer_name">Employer</label>
+                            <input
+                                type="text"
+                                id="employer_name"
+                                name="employer_name"
+                                disabled
+                            >
+                            <small>
+                                This will be populated automatically from your access code.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card register-card card-security">
+                    <h2>Security</h2>
+
+                    <div class="form-grid two-col account-password-grid">
+                        <div class="form-field">
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="confirm_password">Confirm Password</label>
+                            <input
+                                type="password"
+                                id="confirm_password"
+                                name="confirm_password"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card register-card card-declarations">
+                    <h2>Declarations</h2>
+
+                    <div class="declaration-status">
+                        <p><strong>Terms &amp; Conditions:</strong> <span id="terms-status">Please review below</span></p>
+                        <p><strong>Employer Data Notice:</strong> <span id="gdpr-status">Please review below</span></p>
+                    </div>
+
+                    <label class="checkbox-row disabled-check">
+                        <input
+                            type="checkbox"
+                            id="terms_agreed"
+                            name="terms_agreed"
+                            disabled
+                            {% if form_data and form_data.terms_agreed %}checked{% endif %}
+                        >
+                        <span>I have read and agree to the Terms &amp; Conditions</span>
+                    </label>
+
+                    <label class="checkbox-row disabled-check">
+                        <input
+                            type="checkbox"
+                            id="gdpr_agreed"
+                            name="gdpr_agreed"
+                            disabled
+                            {% if form_data and form_data.gdpr_agreed %}checked{% endif %}
+                        >
+                        <span>I have read and understood the Employer Data Notice</span>
+                    </label>
+
+                    <button type="submit" class="btn-primary register-submit-btn">
+                        Create Employer Account
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <aside class="register-right">
+            <div class="agreement-preview-box accent-teal">
+                <h3>Registration Notes</h3>
+                <p>
+                    This employer registration flow is part of a demonstration training management application.
+                    Please use fictitious details only.
+                </p>
+                <p>
+                    Work email addresses are checked against the allowed domain(s) for the selected employer.
+                </p>
+                <p>
+                    Employer access may be restricted if account details are no longer valid or if periodic
+                    access confirmation is not completed.
+                </p>
+            </div>
+
+            <div class="scroll-doc-box accent-orange">
+                <h3>Terms &amp; Conditions</h3>
+                <div class="scroll-doc">
+                    <p><strong>Demo Application Notice</strong></p>
+                    <p>
+                        This training management system is a demonstration application created for portfolio,
+                        learning, and development purposes only. You must not enter real personal, employment,
+                        or commercially sensitive data into this system.
+                    </p>
+                    <p>
+                        By continuing, you confirm that the information entered is fictitious and is being used
+                        only to test or demonstrate the system.
+                    </p>
+                    <p>
+                        Employer contact accounts created in this demo may be reset, amended, or removed as part
+                        of ongoing development, bug fixing, testing, or application improvements.
+                    </p>
+                    <p>
+                        By agreeing to these Terms &amp; Conditions, you confirm that you understand the purpose
+                        of this demonstration system and wish to proceed on that basis.
+                    </p>
+                </div>
+            </div>
+
+            <div class="scroll-doc-box accent-orange">
+                <h3>Employer Data Notice</h3>
+                <div class="scroll-doc">
+                    <p><strong>Demo Data and Access Notice</strong></p>
+                    <p>
+                        This application is not intended for the storage of real personal data. You should only
+                        use fictitious information while interacting with this demonstration system.
+                    </p>
+                    <p>
+                        Information entered into the system may be viewed by the developer for testing,
+                        demonstration, maintenance, and support purposes.
+                    </p>
+                    <p>
+                        During the demo phase, the database may be refreshed to a blank state periodically,
+                        including where development, improvements, bug fixes, or changes to the application are required.
+                    </p>
+                    <p>
+                        Employer contact access may be subject to review, inactivity checks, and periodic
+                        confirmation that access is still required.
+                    </p>
+                    <p>
+                        By confirming this notice, you acknowledge that you have read and understood how demo data
+                        may be used within this training management application.
+                    </p>
+                </div>
+            </div>
+        </aside>
+
     </div>
 </div>
 {% endblock %}

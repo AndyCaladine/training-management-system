@@ -266,7 +266,7 @@ def register_student():
 
             conn.execute(
                 """
-                INSERT INTO training_agreements (
+                INSERT INTO training_agreements (understood
                     student_id,
                     employer_id,
                     agreement_status,
@@ -453,26 +453,326 @@ def demo_access_codes():
         employer_codes = conn.execute(
             """
             SELECT
-                code,
-                company_name,
-                is_active,
-                expires_at,
-                created_at,
-                updated_at
-            FROM employer_access_codes
-            ORDER BY created_at DESC, code ASC
+                eac.id,
+                eac.code,
+                e.company_name,
+                eac.employer_id,
+                eac.is_active,
+                eac.is_single_use,
+                eac.expires_at,
+                eac.created_at,
+                eac.updated_at
+            FROM employer_access_codes eac
+            JOIN employers e ON eac.employer_id = e.id
+            ORDER BY eac.created_at DESC, eac.code ASC
+            """
+        ).fetchall()
+
+        allowed_domains = conn.execute(
+            """
+            SELECT
+                employer_id,
+                domain_name
+            FROM employer_allowed_domains
+            WHERE is_active = 1
+            ORDER BY domain_name ASC
             """
         ).fetchall()
     finally:
         conn.close()
 
+    domains_by_employer = {}
+
+    for row in allowed_domains:
+        employer_id = row["employer_id"]
+        domain_name = row["domain_name"]
+
+        if employer_id not in domains_by_employer:
+            domains_by_employer[employer_id] = []
+
+        domains_by_employer[employer_id].append(domain_name)
+
     return render_template(
         "demo_access_codes.html",
         student_codes=student_codes,
-        employer_codes=employer_codes
+        employer_codes=employer_codes,
+        domains_by_employer=domains_by_employer
     )
 
+@registration_bp.route("/register/employer/access-code-lookup", methods=["POST"])
+def employer_access_code_lookup():
+    data = request.get_json(silent=True) or {}
+    access_code = (data.get("access_code") or "").strip()
+
+    if not access_code:
+        return jsonify(
+            {
+                "valid": False,
+                "message": "Please enter an access code.",
+            }
+        ), 400
+
+    conn = get_db_connection()
+
+    try:
+        code_row = conn.execute(
+            """
+            SELECT
+                eac.id,
+                eac.code,
+                eac.is_active,
+                eac.expires_at,
+                eac.employer_id,
+                e.company_name
+            FROM employer_access_codes eac
+            JOIN employers e ON eac.employer_id = e.id
+            WHERE eac.code = ?
+            """,
+            (access_code,),
+        ).fetchone()
+
+        allowed_domain_rows = []
+        if code_row:
+            allowed_domain_rows = conn.execute(
+                """
+                SELECT domain_name
+                FROM employer_allowed_domains
+                WHERE employer_id = ?
+                  AND is_active = 1
+                ORDER BY domain_name ASC
+                """,
+                (code_row["employer_id"],),
+            ).fetchall()
+    finally:
+        conn.close()
+
+    if not code_row:
+        return jsonify(
+            {
+                "valid": False,
+                "message": "Access code not recognised.",
+            }
+        ), 404
+
+    if int(code_row["is_active"]) != 1:
+        return jsonify(
+            {
+                "valid": False,
+                "message": "This access code is inactive.",
+            }
+        ), 400
+
+    allowed_domains = [row["domain_name"] for row in allowed_domain_rows]
+
+    return jsonify(
+        {
+            "valid": True,
+            "employer_name": code_row["company_name"],
+            "allowed_domains": allowed_domains,
+            "message": "Access code accepted.",
+        }
+    )
+                            
 
 @registration_bp.route("/register/employer", methods=["GET", "POST"])
 def register_employer():
+    if request.method == "POST":
+        access_code = request.form.get("access_code", "").strip()
+        first_name = request.form.get("first_name", "").strip()
+        last_name = request.form.get("last_name", "").strip()
+        work_email = request.form.get("work_email", "").strip().lower()
+        work_phone = request.form.get("work_phone", "").strip()
+        secondary_phone = request.form.get("secondary_phone", "").strip()
+        job_title = request.form.get("job_title", "").strip()
+        department = request.form.get("department", "").strip()
+        employee_reference = request.form.get("employee_reference", "").strip()
+        preferred_contact_method = request.form.get("preferred_contact_method", "").strip()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        terms_agreed = request.form.get("terms_agreed")
+        gdpr_agreed = request.form.get("gdpr_agreed")
+
+        errors = []
+        conn = get_db_connection()
+
+        try:
+            access_row = conn.execute(
+                """
+                SELECT  
+                    eac.id,
+                    eac.code,
+                    eac.is_active,
+                    eac.expires_at,
+                    eac.employer_id,
+                    e.company_name
+                FROM employer_access_codes eac
+                JOIN employers e ON eac.employer_id = e.id
+                WHERE eac.code = ?
+                """,
+                (access_code,),
+            ).fetchone()
+
+            if not access_code:
+                errors.append("Access code is required.")
+            elif not access_row:
+                errors.append("Access code not recognised.")
+            elif int(access_row["is_active"]) != 1:
+                errors.append("This access code is inactive.")
+            
+            if not first_name:
+                errors.append("First name is required.")
+            
+            if not last_name:
+                errors.append("Last name is required.")
+
+            if not work_email:
+                errors.append("Work email address is required.")
+
+            if not job_title:
+                errors.append("Job title is required.")
+
+            if not password:
+                errors.append("Password is required.")
+            
+            if not confirm_password:
+                errors.append("Please confirm your password.")
+
+            if preferred_contact_method and preferred_contact_method not in ["email", "phone"]:
+                errors.append("Preferred contact method must be either 'email' or 'phone'.")
+
+            if not terms_agreed:
+                errors.append("You must agree to the Terms & Conditions.")
+            
+            if not gdpr_agreed:
+                errors.append("You must confirm the Employer Data Notice.")
+            
+            if password and len(password) < 8:
+                errors.append("Password must be at least 8 characters long.")
+
+            if password and not any(char.islower() for char in password):
+                errors.append("Password must include at least one lowercase letter.")
+
+            if password and not any(char.isupper() for char in password):
+                errors.append("Password must include at least one uppercase letter.")
+            
+            if password and not any(char.isdigit() for char in password):
+                errors.append("Password must include at least one number.")
+            
+            if password and not any(not char.isalnum() for char in password):
+                errors.append("Password must include at least one special character.")
+
+            if password and confirm_password and password != confirm_password:
+                errors.append("Password and confirm password do not match.")
+
+            if work_email:
+                existing_user = conn.execute(
+                    "SELECT id FROM users WHERE email = ?",
+                    (work_email,),
+                ).fetchone()
+
+                if existing_user:
+                    errors.append("An account already exists for that email address.")
+            
+            if access_row and work_email and "@" in work_email:
+                email_domain = work_email.split("@")[-1].lower()
+
+                allowed_domain = conn.execute(
+                    """
+                    SELECT id
+                    FROM employer_allowed_domains
+                    WHERE employer_id = ?
+                    AND LOWER(domain_name) = ?
+                    AND is_active = 1
+                    """,
+                    (access_row["employer_id"], email_domain),
+                ).fetchone()
+
+                if not allowed_domain:
+                    errors.append("This work email domain is not authorised for the selected employer.")
+
+            if errors:
+                form_data = request.form.to_dict()
+
+                for error in errors:
+                    flash(error, "error")
+
+                return render_template("register_employer.html", form_data=form_data)
+
+            password_hash = generate_password_hash(password)
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            gdpr_due_at = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+
+            user_cursor = conn.execute(
+                """
+                INSERT INTO users (email, password, role, is_active)
+                VALUES (?, ?, ?, ?)
+                """,
+                (work_email, password_hash, "employer", 1),
+            )
+            user_id = user_cursor.lastrowid
+
+            conn.execute(
+                """
+                INSERT INTO employer_contacts (
+                    user_id,
+                    employer_id,
+                    first_name,
+                    last_name,
+                    job_title,
+                    department,
+                    employee_reference,
+                    work_email,
+                    work_phone,
+                    secondary_phone,
+                    preferred_contact_method,
+                    registration_status,
+                    is_primary_contact,
+                    gdpr_confirmed_at,
+                    gdpr_confirmation_due_at,
+                    last_login_at,
+                    locked_at,
+                    lock_reason,
+                    terms_agreed_at,
+                    gdpr_agreed_at
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    user_id,
+                    access_row["employer_id"],
+                    first_name,
+                    last_name,
+                    job_title,
+                    department or None,
+                    employee_reference or None,
+                    work_email,
+                    work_phone or None,
+                    secondary_phone or None,
+                    preferred_contact_method or "email",
+                    "active",
+                    0,
+                    now,
+                    gdpr_due_at,
+                    now,
+                    None,
+                    None,
+                    now,
+                    now
+                ),
+            )
+
+            conn.commit()
+
+            session["user_id"] = user_id
+            session["email"] = work_email
+            session["role"] = "employer"
+            session["user_name"] = first_name
+
+            flash("Em[loyer account created successfully.", "success")
+            return redirect(url_for("home"))
+        
+        finally:
+            conn.close()
+
     return render_template("register_employer.html")
+
