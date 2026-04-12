@@ -1,70 +1,116 @@
 <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-            <title>{% block title %}Training System{% endblock %}</title>
-    
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        {% if session.get('user_id') %}
+<html lang="en">
+<head>
+    <!--
+        Base template head section.
 
+        This file provides the shared layout for the whole application.
+        Global assets are loaded here once, while individual pages can inject
+        extra CSS or JavaScript using the page_css and page_js blocks.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Training System{% endblock %}</title>
+
+    <!-- Global application stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- Flatpickr stylesheet for pages that use date pickers -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Shared font used across the application -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <!--
+        Page-specific CSS hook.
+
+        Use this block when a page needs extra styling that should not be loaded
+        across the whole application.
+    -->
+    {% block page_css %}{% endblock %}
+</head>
+
+<body>
+    <!--
+        Shared application header.
+
+        Logged-in users see quick account navigation.
+        Logged-out users see a login button instead.
+    -->
+    <header class="app-header">
+        <div class="header-left">
+            <h1 class="app-title">Training Management System</h1>
+        </div>
+
+        <div class="header-right">
+            {% if session.get('user_id') %}
+
+                {% if request.endpoint != 'student.student_dashboard' %}
+                    <a href="{{ url_for('student.student_dashboard') }}" class="nav-button secondary">
+                        Dashboard
+                    </a>
+                {% endif %}
+
+                <div class="user-menu">
+                    <button class="nav-button secondary user-menu-toggle" type="button">
+                        Hi {{ session.get('user_name', 'User') }} ▾
+                    </button>
+
+                    <div class="user-dropdown">
+                        <a href="{{ url_for('student.student_dashboard') }}">Dashboard</a>
+                        <a href="{{ url_for('change_details') }}">Change Your Details</a>
+                        <a href="{{ url_for('change_password') }}">Change Your Password</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                </div>
+
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-button secondary">
+                    Login
+                </a>
             {% endif %}
-        </head>
+        </div>
+    </header>
 
-        <body>
-            <header class="app-header">
-                <div class="header-left">
-                    <h1 class="app-title">Training Management System</h1>
-                </div>
+    <!-- Main page content -->
+    <main>
+        {% block content %}{% endblock %}
 
-                <div class="header-right">
-                    {% if session.get('user_id') %}
+        <!--
+            Shared flash message area.
 
-                        {% if request.endpoint != 'student.student_dashboard' %}
-                            <a href="{{ url_for('student.student_dashboard') }}" class="nav-button secondary">
-                                Dashboard
-                            </a>
-                        {% endif %}
+            Any flashed success, warning, or error messages are rendered here
+            so all pages get consistent user feedback.
+        -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </main>
 
-                        <div class="user-menu">
-                            <button class="nav-button secondary user-menu-toggle" type="button">
-                                Hi {{ session.get('user_name', 'User') }} ▾
-                            </button>
+    <!-- Shared third-party library for date-picker-enabled forms -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-                            <div class="user-dropdown">
-                                <a href="{{ url_for('student.student_dashboard') }}">Dashboard</a>
-                                <a href="{{ url_for('change_details') }}">Change Your Details</a>
-                                <a href="{{ url_for('change_password') }}">Change Your Password</a>
-                                <a href="{{ url_for('logout') }}">Logout</a>
-                            </div>
-                        </div>
+    <!-- Global application JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-                    {% else %}
-                        <a href="{{ url_for('login') }}" class="nav-button secondary">
-                            Login
-                        </a>
-                    {% endif %}
-                </div>
-            </header>
+    <!--
+        Page-specific JavaScript hook.
 
-            <main>
-                {% block content %}{% endblock %}
-
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="flash-message {{ category }}">{{ message }}</div>       
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-            </main>
-
-
-            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-            <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-
-        </body>
-    </html>
+        Load shared helpers first, then the page file itself.
+        Example:
+        - js/shared/filters.js
+        - js/pages/student-dashboard.js
+    -->
+    {% block page_js %}{% endblock %}
+</body>
+</html>

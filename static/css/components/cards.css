@@ -1,0 +1,376 @@
+/*
+===========================================================
+Cards
+-----------------------------------------------------------
+Reusable card patterns used across dashboards, registration
+screens, auth pages, summaries, and review context panels.
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Statistics and summary cards
+-----------------------------------------------------------
+Used across dashboards and summary sections.
+-----------------------------------------------------------
+*/
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.stat-card.approved {
+    border-left: 5px solid #16a34a;
+}
+
+.stat-card.draft {
+    border-left: 5px solid #2563eb;
+}
+
+.stat-card.rejected {
+    border-left: 5px solid #dc2626;
+}
+
+.stat-card.total {
+    border-left: 5px solid #7c3aed;
+}
+
+/*
+-----------------------------------------------------------
+Profile and agreement summary cards
+-----------------------------------------------------------
+Used on student-facing dashboard pages and review pages.
+-----------------------------------------------------------
+*/
+
+.profile-card {
+    background: linear-gradient(135deg, #1f2937, #374151);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.profile-main h2 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.profile-meta {
+    margin-top: 0.5rem;
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+
+.agreement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.agreement-grid .stat-card {
+    padding: 1.2rem;
+}
+
+.agreement-grid .stat-card h4 {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 0.4rem;
+}
+
+.agreement-grid .stat-card p {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.agreement-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+/*
+-----------------------------------------------------------
+Authentication cards
+-----------------------------------------------------------
+Used on login and related auth pages.
+-----------------------------------------------------------
+*/
+
+.auth-container {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.auth-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.auth-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    border-radius: 12px 0 0 12px;
+}
+
+.login-card::before {
+    background: #3b82f6;
+}
+
+.student-card::before {
+    background: #6a3df0;
+}
+
+.employer-card::before {
+    background: #14b8a6;
+}
+
+/*
+-----------------------------------------------------------
+Registration and account-management cards
+-----------------------------------------------------------
+Used across registration, change-details, and related flows.
+-----------------------------------------------------------
+*/
+
+.register-card,
+.live-summary-card,
+.agreement-preview-box,
+.scroll-doc-box,
+.signature-box {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e7ebf0;
+}
+
+.register-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: visible;
+}
+
+.register-card h2 {
+    margin: 0 0 1.25rem 0;
+    font-size: 1.8rem;
+    line-height: 1.2;
+}
+
+.live-summary-card,
+.agreement-preview-box,
+.scroll-doc-box,
+.signature-box {
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.live-summary p {
+    margin: 0 0 0.85rem 0;
+    font-size: 1rem;
+}
+
+.live-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.agreement-preview-box h3,
+.scroll-doc-box h3,
+.signature-box h3 {
+    margin: 0 0 0.85rem 0;
+    font-size: 1.35rem;
+}
+
+.agreement-preview-box p,
+.scroll-doc-box p {
+    line-height: 1.6;
+}
+
+/*
+-----------------------------------------------------------
+Registration card accent variants
+-----------------------------------------------------------
+These create visual grouping within large forms.
+-----------------------------------------------------------
+*/
+
+.card-access {
+    border-left: 6px solid #3b82f6;
+}
+
+.card-account {
+    border-left: 6px solid #6a3df0;
+}
+
+.card-agreement {
+    border-left: 6px solid #14b8a6;
+}
+
+.card-declarations {
+    border-left: 6px solid #f59e0b;
+}
+
+/*
+-----------------------------------------------------------
+Accent helper classes
+-----------------------------------------------------------
+Used for non-register-card summary and preview panels.
+-----------------------------------------------------------
+*/
+
+.accent-blue {
+    border-left: 6px solid #3b82f6;
+}
+
+.accent-purple {
+    border-left: 6px solid #6a3df0;
+}
+
+.accent-teal {
+    border-left: 6px solid #14b8a6;
+}
+
+.accent-orange {
+    border-left: 6px solid #f59e0b;
+}
+
+/*
+-----------------------------------------------------------
+Scrollable document and signature styles
+-----------------------------------------------------------
+Used on registration and declaration flows.
+-----------------------------------------------------------
+*/
+
+.scroll-doc {
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+    line-height: 1.65;
+}
+
+.scroll-doc::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-doc::-webkit-scrollbar-thumb {
+    background: #cfd8e3;
+    border-radius: 8px;
+}
+
+.scroll-doc::-webkit-scrollbar-track {
+    background: #f3f5f8;
+}
+
+.signature-box {
+    border: 1px dashed #cfd8e3;
+    background: linear-gradient(to bottom, #ffffff, #fafcff);
+}
+
+.signature-name {
+    font-family: "Caveat", cursive;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    margin: 0.5rem 0 0.25rem;
+    color: #1f2937;
+}
+
+.signature-date {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/*
+-----------------------------------------------------------
+Review context cards
+-----------------------------------------------------------
+Used on periodic review pages to show related data
+alongside the review form.
+-----------------------------------------------------------
+*/
+
+.review-context-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.review-context-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #111827;
+}
+
+/*
+-----------------------------------------------------------
+Responsive card spacing
+-----------------------------------------------------------
+Keeps larger card-based layouts readable on mobile.
+-----------------------------------------------------------
+*/
+
+@media (max-width: 700px) {
+    .register-card,
+    .live-summary-card,
+    .agreement-preview-box,
+    .scroll-doc-box,
+    .signature-box {
+        padding: 1rem;
+    }
+}
+
+/*
+-----------------------------------------------------------
+Form section variants
+-----------------------------------------------------------
+Used to visually distinguish registration sections.
+-----------------------------------------------------------
+*/
+
+.form-card.contact {
+    border-left: 5px solid #3b82f6; /* blue */
+}
+
+.form-card.security {
+    border-left: 5px solid #7c3aed; /* purple */
+}
+
+.form-card.declarations {
+    border-left: 5px solid #f59e0b; /* orange */
+}

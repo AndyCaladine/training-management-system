@@ -1,0 +1,198 @@
+/*
+===========================================================
+Student dashboard
+-----------------------------------------------------------
+Page-specific styles for the student dashboard and closely
+related student summary views.
+
+Rules:
+- Keep reusable cards, tables, badges, and buttons in
+  component files.
+- Keep dashboard-only layout and selector controls here.
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Dashboard section header
+-----------------------------------------------------------
+Used above the selector cards and page-level actions.
+-----------------------------------------------------------
+*/
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+/*
+-----------------------------------------------------------
+Dashboard selector cards
+-----------------------------------------------------------
+These cards let the student switch between major dashboard
+sections such as timesheets, learning, exams, and reviews.
+-----------------------------------------------------------
+*/
+
+.dashboard-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-selector-card {
+    background: white;
+    border: none;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-selector-card.approved {
+    border-left: 5px solid #16a34a;
+}
+
+.dashboard-selector-card.draft {
+    border-left: 5px solid #2563eb;
+}
+
+.dashboard-selector-card.rejected {
+    border-left: 5px solid #dc2626;
+}
+
+.dashboard-selector-card.total {
+    border-left: 5px solid #7c3aed;
+}
+
+.dashboard-selector-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-selector-card.active {
+    outline: 3px solid rgba(37, 99, 235, 0.18);
+    transform: translateY(-2px);
+}
+
+.dashboard-selector-title {
+    display: block;
+    margin-bottom: 0.85rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.dashboard-selector-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.dashboard-selector-mini {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 0.75rem;
+}
+
+.dashboard-selector-mini small {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #4b5563;
+    font-size: 0.85rem;
+}
+
+.dashboard-selector-mini strong {
+    font-size: 1.35rem;
+    color: #111827;
+}
+
+/*
+-----------------------------------------------------------
+Hidden dashboard sections
+-----------------------------------------------------------
+Used by the dashboard page script when switching between
+focused and "view all" modes.
+-----------------------------------------------------------
+*/
+
+.dashboard-section-hidden {
+    display: none;
+}
+
+/*
+-----------------------------------------------------------
+Review page context grid
+-----------------------------------------------------------
+Used on periodic review forms to show related records in the
+same review window.
+-----------------------------------------------------------
+*/
+
+.review-context-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/*
+-----------------------------------------------------------
+Dashboard header actions
+-----------------------------------------------------------
+Groups the dashboard action buttons in the top-right area
+of the selector header.
+-----------------------------------------------------------
+*/
+
+.dashboard-selector-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/*
+-----------------------------------------------------------
+Student profile summary banner
+-----------------------------------------------------------
+Styles the top dashboard banner that shows the student
+name, number, and route information.
+-----------------------------------------------------------
+*/
+
+.profile-card {
+    color: #ffffff;
+}
+
+.profile-main h2 {
+    margin: 0 0 0.5rem 0;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+.profile-meta {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 500;
+}

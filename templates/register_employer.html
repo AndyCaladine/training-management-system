@@ -3,6 +3,14 @@
 {% block title %}Employer Contact Registration{% endblock %}
 
 {% block content %}
+<!--
+    Employer contact registration page.
+
+    This template renders the employer-side registration form only.
+    Interactive behaviour such as access code validation, allowed domain
+    loading, work email building, and declaration gating is handled by
+    the employer registration JavaScript file.
+-->
 <div class="register-page">
     <div class="register-layout">
 
@@ -110,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="card register-card card-contact">
+                <div class="card register-card card-contact form-card contact">
                     <h2>Work Contact Information</h2>
 
                     <div class="form-grid two-col">
@@ -177,7 +185,7 @@
                     </div>
                 </div>
 
-                <div class="card register-card card-security">
+                <div class="card register-card card-security form-card security">
                     <h2>Security</h2>
 
                     <div class="form-grid two-col account-password-grid">
@@ -311,4 +319,19 @@
 
     </div>
 </div>
+{% endblock %}
+
+{% block page_js %}
+<!--
+    Employer registration scripts.
+
+    Shared helpers are loaded first so the page controller can use them for:
+    - access code validation
+    - declaration scroll gating
+    - allowed email domain loading
+    - work email generation
+-->
+<script src="{{ url_for('static', filename='js/shared/access-code.js') }}"></script>
+<script src="{{ url_for('static', filename='js/shared/scroll-gate.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/employer-registration.js') }}"></script>
 {% endblock %}

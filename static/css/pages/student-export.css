@@ -1,0 +1,36 @@
+/*
+===========================================================
+Student Export Page
+===========================================================
+
+Handles layout and styling for the student export options
+screen, including:
+- checkbox selection list
+- export button layout
+
+This file is intentionally scoped to this page to avoid
+polluting global styles.
+
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Export page
+-----------------------------------------------------------
+*/
+
+.export-form {
+    max-width: 600px;
+}
+
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.export-submit-btn {
+    margin-top: 0.5rem;
+}

@@ -1,0 +1,70 @@
+/*
+===========================================================
+Filters
+-----------------------------------------------------------
+Reusable filter controls and states used in dashboard tables
+and record listings.
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Generic filter button groups
+-----------------------------------------------------------
+Used where filter buttons appear outside table rows.
+-----------------------------------------------------------
+*/
+
+.filter-button-group button {
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    border: none;
+    background: #374151;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-button-group button:hover {
+    background: #1f2937;
+}
+
+.filter-button-group button:disabled,
+.button-disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/*
+-----------------------------------------------------------
+Table filter rows
+-----------------------------------------------------------
+Used in record tables that provide inline filter controls.
+-----------------------------------------------------------
+*/
+
+.filter-row th {
+    background: #ffffff;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.filter-row input,
+.filter-row select {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: white;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.filter-row input:focus,
+.filter-row select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}

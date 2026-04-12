@@ -3,6 +3,13 @@
 {% block title %}Edit Learning Record{% endblock %}
 
 {% block content %}
+<!--
+    Edit learning record page.
+
+    This template handles the learning record edit form only.
+    Behaviour such as date pickers and live character validation
+    is handled by the learning form JavaScript.
+-->
 <h2>Edit Learning Record</h2>
 
 <form method="POST" class="learning-form">
@@ -66,7 +73,7 @@
     </div>
 
     <small id="learning_outcomes_live_error" class="error live-error" style="display: none;">
-        Learning outcomes should be at least 20 characters.
+        Learning outcomes should be at least 50 characters.
     </small>
 
     {% if error_field == "learning_outcomes" %}
@@ -125,4 +132,17 @@
 
     <button type="submit" class="button-link">Update Learning Record</button>
 </form>
+{% endblock %}
+
+{% block page_js %}
+<!--
+    Learning record form scripts.
+
+    Shared helpers are loaded first so the page controller can use them for:
+    - date picker initialisation
+    - character counting and validation feedback
+-->
+<script src="{{ url_for('static', filename='js/shared/flatpickr-init.js') }}"></script>
+<script src="{{ url_for('static', filename='js/shared/character-count.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/student-learning-form.js') }}"></script>
 {% endblock %}

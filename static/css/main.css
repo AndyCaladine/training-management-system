@@ -1,0 +1,30 @@
+/*
+===========================================================
+Main stylesheet
+-----------------------------------------------------------
+This file controls stylesheet loading order for the app.
+
+Structure:
+- Base files define global foundations such as layout, text,
+  and utility helpers.
+- Component files define reusable UI patterns.
+- Page files will be added as the refactor continues.
+===========================================================
+*/
+
+@import url("./base/layout.css");
+@import url("./base/typography.css");
+@import url("./base/utilities.css");
+
+@import url("./components/navigation.css");
+@import url("./components/feedback.css");
+@import url("./components/buttons.css");
+@import url("./components/forms.css");
+@import url("./components/cards.css");
+@import url("./components/tables.css");
+@import url("./components/badges.css");
+@import url("./components/filters.css");
+
+@import url("./pages/registration.css");
+@import url("./pages/student-dashboard.css");
+@import url("./pages/auth.css");

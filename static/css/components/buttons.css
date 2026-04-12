@@ -1,0 +1,170 @@
+/*
+===========================================================
+Buttons
+-----------------------------------------------------------
+Shared button styles used across forms, dashboards, tables,
+navigation-adjacent actions, and registration flows.
+
+Rules:
+- Keep button variants reusable.
+- Do not place page-specific button layout here.
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Primary action buttons
+-----------------------------------------------------------
+Used for key submit/save actions.
+-----------------------------------------------------------
+*/
+
+.btn-primary {
+    width: 100%;
+    background: #3b82f6;
+    color: white;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.btn-primary:hover {
+    opacity: 0.95;
+}
+
+/*
+-----------------------------------------------------------
+Secondary action buttons
+-----------------------------------------------------------
+Used for alternative actions such as registration options
+and supportive form actions.
+-----------------------------------------------------------
+*/
+
+.btn-secondary {
+    display: inline-block;
+    background: #6a3df0;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+}
+
+.btn-secondary:hover {
+    opacity: 0.95;
+}
+
+/*
+-----------------------------------------------------------
+Link-style action buttons
+-----------------------------------------------------------
+Used across dashboards, table actions, and page actions.
+-----------------------------------------------------------
+*/
+
+.button-link {
+    display: inline-block;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.button-link:hover {
+    opacity: 0.95;
+}
+
+.secondary-button {
+    background: #7c3aed;
+}
+
+.secondary-button:hover {
+    opacity: 0.95;
+}
+
+/*
+-----------------------------------------------------------
+Small text-style button
+-----------------------------------------------------------
+Used for less prominent actions such as manual address entry.
+-----------------------------------------------------------
+*/
+
+.btn-linkish {
+    background: none;
+    border: none;
+    color: #3b82f6;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+/*
+-----------------------------------------------------------
+Table and filter buttons
+-----------------------------------------------------------
+Used in filter rows and table utility actions.
+-----------------------------------------------------------
+*/
+
+.table-filter-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    background: #374151;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.table-filter-button:hover {
+    background: #1f2937;
+}
+
+.table-filter-button:disabled,
+.table-filter-button.button-disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/*
+-----------------------------------------------------------
+Agreement and registration action buttons
+-----------------------------------------------------------
+These stay as lightweight variants because they are reused
+across registration and agreement workflows.
+-----------------------------------------------------------
+*/
+
+.agreement-button {
+    background: #2563eb;
+}
+
+.agreement-button:hover {
+    opacity: 0.95;
+}
+
+.register-submit-btn {
+    width: 100%;
+    margin-top: 0.8rem;
+    min-height: 52px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+}

@@ -3,6 +3,14 @@
 {% block title %}Student Registration{% endblock %}
 
 {% block content %}
+<!--
+    Student registration page.
+
+    This template focuses on structure and content only.
+    Interactive behaviour such as access code lookup, address lookup,
+    live agreement preview, declaration gating, and signature updates
+    is handled by the student registration JavaScript file.
+-->
 <div class="register-page">
     <div class="register-layout">
 
@@ -430,7 +438,7 @@
                     </p>
                 </div>
             </div>
-DEMO-STU-2026
+
             <div class="scroll-doc-box accent-orange">
                 <h3>Student Data Notice</h3>
                 <div class="scroll-doc" id="gdpr-scroll-box">
@@ -467,4 +475,20 @@ DEMO-STU-2026
 
     </div>
 </div>
+{% endblock %}
+
+{% block page_js %}
+<!--
+    Student registration scripts.
+
+    Shared helpers are loaded first so the page controller can use them for:
+    - access code validation
+    - demo address lookup
+    - declaration scroll gating
+    - live agreement preview and signature updates
+-->
+<script src="{{ url_for('static', filename='js/shared/access-code.js') }}"></script>
+<script src="{{ url_for('static', filename='js/shared/address-lookup.js') }}"></script>
+<script src="{{ url_for('static', filename='js/shared/scroll-gate.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/student-registration.js') }}"></script>
 {% endblock %}

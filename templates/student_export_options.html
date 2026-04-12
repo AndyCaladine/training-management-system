@@ -2,36 +2,64 @@
 
 {% block title %}Export Student Records{% endblock %}
 
+{% block page_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/student-export.css') }}">
+{% endblock %}
+
 {% block content %}
-<h2>Export Student Records</h2>
-<p>Select one or more sections to include in the PDF export.</p>
+<div class="register-page">
+    <div class="register-layout single-column">
 
-<form method="POST" action="{{ url_for('student.export_student_pdf') }}" class="learning-form">
-    <label>
-        <input type="checkbox" id="select_all_sections">
-        Select all
-    </label>
+        <section class="register-left">
+            <h1>Export Student Records</h1>
+            <p class="register-intro">
+                Select one or more sections to include in your PDF export.
+            </p>
 
-    <label>
-        <input type="checkbox" name="sections" value="timesheets">
-        Timesheets
-    </label>
+            <form
+                method="POST"
+                action="{{ url_for('student.export_student_pdf') }}"
+                class="learning-form export-form"
+            >
+                <div class="export-options">
 
-    <label>
-        <input type="checkbox" name="sections" value="learning">
-        Learning Tracker
-    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="select_all_sections">
+                        <span>Select all sections</span>
+                    </label>
 
-    <label>
-        <input type="checkbox" name="sections" value="exams">
-        Exams Tracker
-    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="sections" value="timesheets">
+                        <span>Timesheets</span>
+                    </label>
 
-    <label>
-        <input type="checkbox" name="sections" value="reviews">
-        Periodic Reviews
-    </label>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="sections" value="learning">
+                        <span>Learning Tracker</span>
+                    </label>
 
-    <button type="submit" class="button-link secondary-button">Generate Export</button>
-</form>
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="sections" value="exams">
+                        <span>Exams Tracker</span>
+                    </label>
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="sections" value="reviews">
+                        <span>Periodic Reviews</span>
+                    </label>
+
+                </div>
+
+                <button type="submit" class="btn-primary export-submit-btn">
+                    Generate Export
+                </button>
+            </form>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block page_js %}
+<script src="{{ url_for('static', filename='js/pages/student-export-options.js') }}"></script>
 {% endblock %}

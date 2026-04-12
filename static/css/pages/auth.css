@@ -1,0 +1,126 @@
+/*
+===========================================================
+Authentication pages
+-----------------------------------------------------------
+Page-level layout for:
+- login
+- forgot password
+- password reset-style auth screens
+
+Rules:
+- Keep reusable auth cards in components/cards.css
+- Keep button and input styling in component files
+- Use this file only for auth page layout wrappers
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Auth landing layout
+-----------------------------------------------------------
+Defines the login/register page structure and card grouping.
+-----------------------------------------------------------
+*/
+
+.auth-options {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.auth-options .auth-card {
+    flex: 1;
+    min-width: 280px;
+}
+
+/*
+-----------------------------------------------------------
+Supporting information blocks
+-----------------------------------------------------------
+Used inside auth cards for registration guidance.
+-----------------------------------------------------------
+*/
+
+.what-you-need {
+    margin: 1rem 0 1.25rem 0;
+    padding: 0.9rem 1rem;
+    background: #f8f9fb;
+    border-radius: 10px;
+}
+
+.what-you-need h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.what-you-need ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.what-you-need li {
+    margin-bottom: 0.35rem;
+    font-size: 0.92rem;
+}
+
+/* =========================================
+   Forgot Password – Email Preview
+   ========================================= */
+
+.reset-preview-card {
+    margin-top: 1.5rem;
+}
+
+.reset-email-box {
+    margin-top: 1rem;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+}
+
+.reset-email-box hr {
+    margin: 1rem 0;
+}
+
+.reset-email-button-wrap {
+    margin: 1.25rem 0;
+}
+
+.reset-email-button {
+    display: inline-block;
+    padding: 0.75rem 1.2rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.reset-email-small {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.reset-email-link {
+    word-break: break-all;
+}
+
+.reset-email-signoff {
+    margin-top: 1rem;
+}
+
+/*
+-----------------------------------------------------------
+Auth helper spacing
+-----------------------------------------------------------
+Small page-level spacing helpers used on auth screens.
+-----------------------------------------------------------
+*/
+
+.auth-support-link {
+    margin-top: 0.75rem;
+}
+
+.auth-option-button {
+    margin-top: 0.5rem;
+}

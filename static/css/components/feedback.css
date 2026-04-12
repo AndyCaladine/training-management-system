@@ -1,0 +1,66 @@
+/*
+===========================================================
+Feedback and validation
+-----------------------------------------------------------
+Shared styles for errors, helper feedback, and inline field
+messages shown across forms and dashboard pages.
+===========================================================
+*/
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.live-error {
+    margin-top: -0.35rem;
+}
+
+/*
+-----------------------------------------------------------
+Character count feedback
+-----------------------------------------------------------
+Used on learning records and periodic review forms.
+-----------------------------------------------------------
+*/
+
+.char-counter {
+    color: #6b7280;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.char-counter.too-short {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.helper-text {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/*
+-----------------------------------------------------------
+Field-level feedback messages
+-----------------------------------------------------------
+Used for access code checks, address lookup responses,
+and similar inline form feedback.
+-----------------------------------------------------------
+*/
+
+.field-message {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.field-message.success {
+    color: #2e7d32;
+}
+
+.field-message.error {
+    color: #c62828;
+}

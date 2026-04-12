@@ -3,9 +3,15 @@
 {% block title %}Edit Timesheet{% endblock %}
 
 {% block content %}
+<!--
+    Edit timesheet page.
+
+    This template provides the timesheet edit form only.
+    Date-picker behaviour is handled by the student timesheet form script.
+-->
 <h2>Edit Timesheet</h2>
 
-<form method="POST" class="login-form">
+<form method="POST" class="learning-form">
 
     <label for="start_date">Start Date</label>
     <input
@@ -27,6 +33,7 @@
         class="date-input js-timesheet-end-date {% if error_field == 'end_date' %}input-error{% endif %}"
         required
     >
+
     {% if error %}
         <p class="error">{{ error }}</p>
     {% endif %}
@@ -48,6 +55,17 @@
         value="{{ form_data['reviewer_name'] if form_data else timesheet['reviewer_name'] }}"
     >
 
-    <button type="submit">Update Timesheet</button>
+    <button type="submit" class="btn-primary">Update Timesheet</button>
 </form>
+{% endblock %}
+
+{% block page_js %}
+<!--
+    Timesheet form scripts.
+
+    The shared Flatpickr helper is loaded first, followed by the page-specific
+    controller that applies date pickers to the timesheet fields.
+-->
+<script src="{{ url_for('static', filename='js/shared/flatpickr-init.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/student-timesheet-form.js') }}"></script>
 {% endblock %}

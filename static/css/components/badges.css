@@ -1,0 +1,124 @@
+/*
+===========================================================
+Badges
+-----------------------------------------------------------
+Reusable status badges and completion indicators used across
+dashboard tables, learning records, exams, and reviews.
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Base badge style
+-----------------------------------------------------------
+Shared pill-style appearance for all statuses.
+-----------------------------------------------------------
+*/
+
+.status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/*
+-----------------------------------------------------------
+Approval workflow badge variants
+-----------------------------------------------------------
+Used for draft, submitted, approved, and rejected states.
+-----------------------------------------------------------
+*/
+
+.status-badge.draft {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-badge.submitted {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.status-badge.approved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/*
+-----------------------------------------------------------
+Learning record status badge variants
+-----------------------------------------------------------
+Used for planned, in-progress, and completed learning states.
+-----------------------------------------------------------
+*/
+
+.status-badge.planned {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.status-badge.in_progress {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/*
+-----------------------------------------------------------
+Exam result badge variants
+-----------------------------------------------------------
+Used in the exams tracker and related views.
+-----------------------------------------------------------
+*/
+
+.status-badge.not_attempted {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.status-badge.booked {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-badge.sat {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.passed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/*
+-----------------------------------------------------------
+Completion badge
+-----------------------------------------------------------
+Used for completed exam levels and similar milestones.
+-----------------------------------------------------------
+*/
+
+.completion-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #166534;
+}

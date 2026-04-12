@@ -1,0 +1,116 @@
+/*
+===========================================================
+Registration and account-management pages
+-----------------------------------------------------------
+Page-level layout for:
+- student registration
+- employer registration
+- change details
+- password/account side-panel layouts
+
+Rules:
+- Keep reusable form controls in components/forms.css
+- Keep reusable cards in components/cards.css
+- Use this file for page structure and page-only layout
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Main registration page wrapper
+-----------------------------------------------------------
+Provides the outer width and spacing for registration-style
+pages that use a two-column content + summary layout.
+-----------------------------------------------------------
+*/
+
+.register-page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.register-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(320px, 430px);
+    gap: 2rem;
+    align-items: start;
+}
+
+.register-left h1,
+.register-right h2 {
+    margin-top: 0;
+}
+
+.register-intro {
+    margin: 0 0 1.5rem 0;
+    color: #5b6575;
+    font-size: 1rem;
+}
+
+/*
+-----------------------------------------------------------
+Sticky right-hand summary column
+-----------------------------------------------------------
+Keeps previews and guidance visible while the user moves
+through longer forms.
+-----------------------------------------------------------
+*/
+
+.register-right {
+    position: sticky;
+    top: 1.5rem;
+}
+
+/*
+-----------------------------------------------------------
+Live summary and preview text
+-----------------------------------------------------------
+These are page-level adjustments for the right-hand content.
+-----------------------------------------------------------
+*/
+
+.live-summary p {
+    margin: 0 0 0.85rem 0;
+    font-size: 1rem;
+}
+
+.live-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.agreement-preview-box h3,
+.scroll-doc-box h3,
+.signature-box h3 {
+    margin: 0 0 0.85rem 0;
+    font-size: 1.35rem;
+}
+
+.agreement-preview-box p,
+.scroll-doc-box p {
+    line-height: 1.6;
+}
+
+/*
+-----------------------------------------------------------
+Responsive page layout
+-----------------------------------------------------------
+On smaller screens the side column drops below the form.
+-----------------------------------------------------------
+*/
+
+@media (max-width: 1100px) {
+    .register-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .register-right {
+        position: static;
+    }
+}
+
+@media (max-width: 700px) {
+    .register-page {
+        padding: 1rem;
+    }
+}

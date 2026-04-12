@@ -3,6 +3,13 @@
 {% block title %}Change Your Details{% endblock %}
 
 {% block content %}
+<!--
+    Change details page.
+
+    This template supports both student and employer detail updates.
+    Live summary updates and demo address lookup behaviour are handled
+    by the change-details JavaScript file.
+-->
 <div class="register-page">
     <div class="register-layout">
 
@@ -303,4 +310,17 @@
 
     </div>
 </div>
+{% endblock %}
+
+{% block page_js %}
+<!--
+    Change details scripts.
+
+    Shared helpers are loaded first so the page controller can use them for:
+    - demo address lookup
+    - populating selected address fields
+    - live summary updates for both student and employer views
+-->
+<script src="{{ url_for('static', filename='js/shared/address-lookup.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/change-details.js') }}"></script>
 {% endblock %}

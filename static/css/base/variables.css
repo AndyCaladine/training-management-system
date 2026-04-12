@@ -1,0 +1,21 @@
+/*
+===========================================================
+Base utilities
+-----------------------------------------------------------
+Small reusable helper classes used across multiple pages.
+
+Rules:
+- Keep utilities simple and generic.
+- Do not place component-specific or page-specific styling here.
+===========================================================
+*/
+
+.muted-text {
+    color: #9ca3af;
+}
+
+.input-error {
+    border: 2px solid red !important;
+    background-color: #ffe5e5 !important;
+    outline: none;
+}

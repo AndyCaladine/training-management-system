@@ -1,0 +1,32 @@
+/*
+===========================================================
+Base typography
+-----------------------------------------------------------
+Shared text defaults used across the whole application.
+
+Keep this file focused on body text, headings, and common
+element-level typography rather than component styling.
+===========================================================
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    color: #111827;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #111827;
+}
+
+p {
+    line-height: 1.6;
+}
+
+a {
+    color: #2563eb;
+}

@@ -1,3 +1,19 @@
+/*
+===========================================================
+Legacy backup stylesheet
+-----------------------------------------------------------
+This file is kept temporarily as a backup during the CSS
+refactor.
+
+The application should now load styles from:
+static/css/main.css
+
+Do not add new styles here.
+Once the refactor is fully tested, this file can be removed
+or archived.
+===========================================================
+*/
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -1215,13 +1231,15 @@ main {
 }
 
 .signature-name {
-    font-family: "Brush Script MT", cursive;
-    font-size: 2rem;
-    margin: 0.5rem 0 0.3rem 0;
+    font-family: "Caveat", cursive;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    margin: 0.5rem 0 0.25rem;
     color: #1f2937;
 }
 
 .signature-date {
+    font-size: 0.95rem;
     color: #6b7280;
     margin: 0;
 }

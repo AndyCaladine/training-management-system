@@ -266,7 +266,7 @@ def register_student():
 
             conn.execute(
                 """
-                INSERT INTO training_agreements (understood
+                INSERT INTO training_agreements (
                     student_id,
                     employer_id,
                     agreement_status,
@@ -768,7 +768,7 @@ def register_employer():
             session["role"] = "employer"
             session["user_name"] = first_name
 
-            flash("Em[loyer account created successfully.", "success")
+            flash("Emloyer account created successfully.", "success")
             return redirect(url_for("home"))
         
         finally:

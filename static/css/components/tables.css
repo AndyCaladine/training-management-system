@@ -1,0 +1,113 @@
+/*
+===========================================================
+Tables
+-----------------------------------------------------------
+Reusable table layouts and related controls used across
+dashboards, review context panels, and record lists.
+===========================================================
+*/
+
+/*
+-----------------------------------------------------------
+Table wrappers
+-----------------------------------------------------------
+Ensures large tables remain scrollable on smaller screens
+without breaking card-based layouts.
+-----------------------------------------------------------
+*/
+
+.table-wrapper {
+    overflow-x: auto;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/*
+-----------------------------------------------------------
+Base table styling
+-----------------------------------------------------------
+Shared structure for record tables across the application.
+-----------------------------------------------------------
+*/
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+th,
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+th {
+    background: #f9fafb;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+/*
+-----------------------------------------------------------
+Table actions
+-----------------------------------------------------------
+Used for edit/view links inside table rows.
+-----------------------------------------------------------
+*/
+
+.table-action {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.table-action:hover {
+    text-decoration: underline;
+}
+
+/*
+-----------------------------------------------------------
+Table action bars
+-----------------------------------------------------------
+Used above tables for submit controls and grouped actions.
+-----------------------------------------------------------
+*/
+
+.table-actions-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.submit-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/*
+-----------------------------------------------------------
+Table select controls
+-----------------------------------------------------------
+Used for reviewer selection and similar workflow actions.
+-----------------------------------------------------------
+*/
+
+.table-select {
+    min-width: 260px;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: white;
+    font-size: 0.95rem;
+}
+
+.table-select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}

@@ -1,0 +1,19 @@
+/*
+===========================================================
+Base layout
+-----------------------------------------------------------
+Global page layout and shared structural spacing.
+
+This file should only contain layout foundations that affect
+the whole application, not page-specific styling.
+===========================================================
+*/
+
+body {
+    margin: 0;
+    background: #f4f6f8;
+}
+
+main {
+    padding: 2rem;
+}

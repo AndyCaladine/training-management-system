@@ -68,7 +68,7 @@
 <div class="dashboard-selector-header">
     <h3>Dashboard</h3>
 
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <div class="dashboard-selector-actions">
         <button class="button-link dashboard-view-all-btn">
             View All
         </button>
@@ -566,27 +566,28 @@
     </div>
 
     {% if periodic_reviews %}
-    <div class="stats-grid">
-    <div class="stat-card draft">
-        <h4>Draft Reviews</h4>
-        <p>{{ review_draft_count }}</p>
-    </div>
+        <div class="stats-grid">
+            <div class="stat-card draft">
+                <h4>Draft Reviews</h4>
+                <p>{{ review_draft_count }}</p>
+            </div>
 
-    <div class="stat-card total">
-        <h4>Submitted Reviews</h4>
-        <p>{{ review_submitted_count }}</p>
-    </div>
+            <div class="stat-card total">
+                <h4>Submitted Reviews</h4>
+                <p>{{ review_submitted_count }}</p>
+            </div>
 
-    <div class="stat-card approved">
-        <h4>Approved Reviews</h4>
-        <p>{{ review_approved_count }}</p>
-    </div>
+            <div class="stat-card approved">
+                <h4>Approved Reviews</h4>
+                <p>{{ review_approved_count }}</p>
+            </div>
 
-    <div class="stat-card rejected">
-        <h4>Rejected Reviews</h4>
-        <p>{{ review_rejected_count }}</p>
-    </div>
-</div>
+            <div class="stat-card rejected">
+                <h4>Rejected Reviews</h4>
+                <p>{{ review_rejected_count }}</p>
+            </div>
+        </div>
+
         <form method="POST" action="{{ url_for('student.submit_periodic_reviews') }}">
             <div class="table-actions-bar">
                 <div class="submit-controls">
@@ -655,148 +656,16 @@
     <p>No student profile found.</p>
 {% endif %}
 
-<style>
-.dashboard-selector-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
+{% endblock %}
 
-.dashboard-selector-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
+{% block page_js %}
+<!--
+    Student dashboard scripts.
 
-.dashboard-selector-card {
-    border: none;
-    border-radius: 14px;
-    padding: 1.25rem;
-    text-align: left;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    font: inherit;
-    width: 100%;
-}
-
-.dashboard-selector-card:hover {
-    transform: translateY(-2px);
-}
-
-.dashboard-selector-card.active {
-    outline: 3px solid rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-}
-
-.dashboard-selector-title {
-    display: block;
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 0.9rem;
-}
-
-.dashboard-selector-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-}
-
-.dashboard-selector-mini {
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 10px;
-    padding: 0.75rem;
-}
-
-.dashboard-selector-mini small {
-    display: block;
-    margin-bottom: 0.2rem;
-    opacity: 0.9;
-}
-
-.dashboard-selector-mini strong {
-    font-size: 1.15rem;
-}
-
-.dashboard-view-all-btn.active {
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
-}
-
-.dashboard-section-hidden {
-    display: none;
-}
-</style>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const cards = document.querySelectorAll(".dashboard-selector-card");
-    const viewAllButton = document.querySelector(".dashboard-view-all-btn");
-
-    const sections = {
-        timesheets: document.getElementById("timesheets-section"),
-        learning: document.getElementById("learning-section"),
-        exams: document.getElementById("exams-section"),
-        reviews: document.getElementById("reviews-section")
-    };
-
-    function clearActiveState() {
-        cards.forEach(card => card.classList.remove("active"));
-        if (viewAllButton) {
-            viewAllButton.classList.remove("active");
-        }
-    }
-
-    function showAllSections() {
-        Object.values(sections).forEach(section => {
-            if (section) {
-                section.classList.remove("dashboard-section-hidden");
-            }
-        });
-
-        clearActiveState();
-
-        if (viewAllButton) {
-            viewAllButton.classList.add("active");
-        }
-    }
-
-    function showOnlySection(target) {
-        Object.entries(sections).forEach(([key, section]) => {
-            if (!section) return;
-
-            if (key === target) {
-                section.classList.remove("dashboard-section-hidden");
-            } else {
-                section.classList.add("dashboard-section-hidden");
-            }
-        });
-
-        clearActiveState();
-
-        const activeCard = document.querySelector(`.dashboard-selector-card[data-target="${target}"]`);
-        if (activeCard) {
-            activeCard.classList.add("active");
-        }
-    }
-
-    cards.forEach(card => {
-        card.addEventListener("click", function () {
-            showOnlySection(this.dataset.target);
-        });
-    });
-
-    if (viewAllButton) {
-        viewAllButton.addEventListener("click", function () {
-            showAllSections();
-        });
-    }
-
-    showAllSections();
-});
-</script>
-
+    Load shared helpers first, then the page-specific dashboard controller.
+    This replaces the old inline dashboard script and keeps the page logic
+    in static/js/pages/student-dashboard.js.
+-->
+<script src="{{ url_for('static', filename='js/shared/filters.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/student-dashboard.js') }}"></script>
 {% endblock %}
