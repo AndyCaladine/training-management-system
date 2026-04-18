@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
  * - live summary mirroring for profile/contact fields
  * - demo address lookup
  * - populating standard address fields from the selected address
+ * - employer-specific email username/domain handling
  */
 function initialiseChangeDetailsPage() {
     const form = document.getElementById("change-details-form");
@@ -21,6 +22,7 @@ function initialiseChangeDetailsPage() {
 
     bindLiveSummaryFields(elements);
     bindChangeDetailsEvents(elements);
+    initialiseEmployerChangeDetails();
 }
 
 /**
@@ -36,9 +38,6 @@ function getChangeDetailsElements() {
         county: document.getElementById("county"),
         postcode: document.getElementById("postcode"),
 
-        contactName: document.getElementById("contact_name"),
-        contactEmail: document.getElementById("contact_email"),
-
         department: document.getElementById("department"),
         jobTitle: document.getElementById("job_title"),
 
@@ -49,10 +48,6 @@ function getChangeDetailsElements() {
         summaryTownCity: document.getElementById("summary-town-city"),
         summaryCounty: document.getElementById("summary-county"),
         summaryPostcode: document.getElementById("summary-postcode"),
-
-        summaryContactName: document.getElementById("summary-contact-name"),
-        summaryContactEmail: document.getElementById("summary-contact-email"),
-
         summaryDepartment: document.getElementById("summary-department"),
         summaryJobTitle: document.getElementById("summary-job-title"),
 
@@ -74,8 +69,6 @@ function bindLiveSummaryFields(elements) {
         { input: elements.townCity, output: elements.summaryTownCity },
         { input: elements.county, output: elements.summaryCounty },
         { input: elements.postcode, output: elements.summaryPostcode },
-        { input: elements.contactName, output: elements.summaryContactName },
-        { input: elements.contactEmail, output: elements.summaryContactEmail },
         { input: elements.department, output: elements.summaryDepartment },
         { input: elements.jobTitle, output: elements.summaryJobTitle }
     ];
@@ -131,5 +124,129 @@ function bindChangeDetailsEvents(elements) {
                 dispatchInputEvent: true
             });
         });
+    }
+}
+
+/**
+ * Employer change details controller.
+ *
+ * Why this exists:
+ * This handles the employer-specific behaviour on the change details page,
+ * including:
+ * - splitting the stored email into username + domain
+ * - selecting the current allowed domain from the server-rendered list
+ * - rebuilding the full email address
+ * - keeping the live summary in sync
+ *
+ * This mirrors the behaviour used in employer registration so the
+ * experience is consistent across the application.
+ */
+function initialiseEmployerChangeDetails() {
+    const firstName = document.getElementById("first_name");
+    const lastName = document.getElementById("last_name");
+    const emailUsername = document.getElementById("email_username");
+    const emailDomain = document.getElementById("email_domain");
+    const emailHidden = document.getElementById("email");
+
+    // Exit early if this is not the employer version of the page
+    if (!firstName || !lastName || !emailUsername || !emailDomain || !emailHidden) {
+        return;
+    }
+
+    // Pre-populate email fields from stored value
+    populateEmployerEmailFields(emailHidden.value, emailUsername);
+
+    // Select current domain from server-rendered list
+    selectCurrentEmployerDomain(emailDomain, emailHidden.value);
+
+    // Bind input events
+    firstName.addEventListener("input", updateEmployerSummary);
+    lastName.addEventListener("input", updateEmployerSummary);
+
+    emailUsername.addEventListener("input", () => {
+        buildEmployerChangeEmail(emailUsername, emailDomain, emailHidden);
+        updateEmployerSummary();
+    });
+
+    emailDomain.addEventListener("change", () => {
+        buildEmployerChangeEmail(emailUsername, emailDomain, emailHidden);
+        updateEmployerSummary();
+    });
+
+    // Initial summary state
+    updateEmployerSummary();
+}
+
+/**
+ * Splits an existing email into username and prepares the field.
+ *
+ * Example:
+ * "john.smith@company.com" → username = "john.smith"
+ */
+function populateEmployerEmailFields(currentEmail, emailUsername) {
+    if (!currentEmail || !currentEmail.includes("@")) {
+        return;
+    }
+
+    const [username] = currentEmail.split("@");
+    emailUsername.value = username || "";
+}
+
+/**
+ * Selects the current saved email domain from the dropdown.
+ *
+ * Why this exists:
+ * The allowed domains are rendered by Flask from the database,
+ * so the page only needs to match the current saved email against
+ * the existing options.
+ */
+function selectCurrentEmployerDomain(emailDomain, currentEmail) {
+    if (!emailDomain || !currentEmail || !currentEmail.includes("@")) {
+        return;
+    }
+
+    const currentDomain = currentEmail.split("@")[1].toLowerCase();
+    emailDomain.value = currentDomain;
+}
+
+/**
+ * Builds the full email address from username and selected domain.
+ *
+ * Example:
+ * username = "john.smith"
+ * domain = "company.com"
+ * result = "john.smith@company.com"
+ */
+function buildEmployerChangeEmail(emailUsername, emailDomain, emailHidden) {
+    const username = emailUsername.value.trim().toLowerCase();
+    const domain = emailDomain.value.trim().toLowerCase();
+
+    emailHidden.value = username && domain ? `${username}@${domain}` : "";
+}
+
+/**
+ * Updates the employer live summary panel with current values.
+ *
+ * This keeps the right-hand summary card in sync with user input.
+ */
+function updateEmployerSummary() {
+    const firstName = document.getElementById("first_name");
+    const lastName = document.getElementById("last_name");
+    const emailHidden = document.getElementById("email");
+
+    const summaryFirstName = document.getElementById("summary-first-name");
+    const summaryLastName = document.getElementById("summary-last-name");
+    const summaryEmail = document.getElementById("summary-email");
+
+    if (summaryFirstName) {
+        summaryFirstName.textContent = firstName?.value.trim() || "—";
+    }
+
+    if (summaryLastName) {
+        summaryLastName.textContent = lastName?.value.trim() || "—";
+    }
+
+    if (summaryEmail) {
+        summaryEmail.textContent = emailHidden?.value.trim() || "—";
     }
 }

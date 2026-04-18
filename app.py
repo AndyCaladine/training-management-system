@@ -369,9 +369,142 @@ def change_details():
                 flash("Your details have been updated successfully.", "success")
                 return redirect(url_for("home"))
 
+            return render_template(
+                "change_details.html",
+                role=role,
+                user_details=user_details
+            )
+
         elif role == "employer":
-            flash("Employer change details is still to be built.", "error")
-            return redirect(url_for("home"))
+            user_details = conn.execute(
+                """
+                SELECT
+                    ec.first_name,
+                    ec.last_name,
+                    ec.work_email AS email,
+                    ec.employer_id,
+                    e.company_name
+                FROM employer_contacts ec
+                JOIN users u ON ec.user_id = u.id
+                JOIN employers e ON ec.employer_id = e.id
+                WHERE ec.user_id = ?
+                """,
+                (user_id,)
+            ).fetchone()
+
+            if not user_details:
+                flash("Employer account details could not be found.", "error")
+                return redirect(url_for("home"))
+
+            allowed_domain_rows = conn.execute(
+                """
+                SELECT domain_name
+                FROM employer_allowed_domains
+                WHERE employer_id = ?
+                  AND is_active = 1
+                ORDER BY domain_name ASC
+                """,
+                (user_details["employer_id"],)
+            ).fetchall()
+
+            allowed_domains = [row["domain_name"] for row in allowed_domain_rows]
+
+            if request.method == "POST":
+                first_name = request.form.get("first_name", "").strip()
+                last_name = request.form.get("last_name", "").strip()
+                email = request.form.get("email", "").strip().lower()
+
+                errors = []
+
+                if not first_name:
+                    errors.append("First name is required.")
+
+                if not last_name:
+                    errors.append("Last name is required.")
+
+                if not email:
+                    errors.append("Work email address is required.")
+
+                if email:
+                    existing_email_user = conn.execute(
+                        """
+                        SELECT id
+                        FROM users
+                        WHERE email = ? AND id != ?
+                        """,
+                        (email, user_id)
+                    ).fetchone()
+
+                    if existing_email_user:
+                        errors.append("That email address is already in use.")
+
+                if email and "@" in email:
+                    email_domain = email.split("@")[-1].lower()
+
+                    if email_domain not in [domain.lower() for domain in allowed_domains]:
+                        errors.append("This work email domain is not authorised for your organisation.")
+                elif email:
+                    errors.append("Please enter a valid work email address.")
+
+                if errors:
+                    for error in errors:
+                        flash(error, "error")
+
+                    form_data = {
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "email": email,
+                        "company_name": user_details["company_name"],
+                        "employer_id": user_details["employer_id"],
+                    }
+
+                    return render_template(
+                        "change_details.html",
+                        role=role,
+                        user_details=form_data,
+                        allowed_domains=allowed_domains
+                    )
+
+                conn.execute(
+                    """
+                    UPDATE users
+                    SET email = ?
+                    WHERE id = ?
+                    """,
+                    (email, user_id)
+                )
+
+                conn.execute(
+                    """
+                    UPDATE employer_contacts
+                    SET
+                        first_name = ?,
+                        last_name = ?,
+                        work_email = ?,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = ?
+                    """,
+                    (
+                        first_name,
+                        last_name,
+                        email,
+                        user_id,
+                    )
+                )
+
+                conn.commit()
+                session["email"] = email
+                session["user_name"] = first_name
+
+                flash("Your details have been updated successfully.", "success")
+                return redirect(url_for("home"))
+
+            return render_template(
+                "change_details.html",
+                role=role,
+                user_details=user_details,
+                allowed_domains=allowed_domains
+            )
 
         else:
             flash("This account type cannot edit details here.", "error")
@@ -379,13 +512,6 @@ def change_details():
 
     finally:
         conn.close()
-
-    return render_template(
-        "change_details.html",
-        role=role,
-        user_details=user_details
-    )
-
 
 @app.route("/change-password", methods=["GET", "POST"])
 def change_password():

@@ -157,3 +157,48 @@ Major refactor of CSS and JavaScript structure followed by a full QA pass of the
 - Raise backlog issues for workflow and UX improvements
 - Begin QA testing of employer-side functionality
 - Continue refining system workflows rather than just UI
+
+## 18-04-2026 - Change Details – Employer Email Handling Refactor
+
+### Summary
+Refactored the employer change details flow to improve usability, align with real-world system behaviour, and remove unnecessary complexity from the user interface.
+
+### What Was Done
+- Implemented employer change details functionality
+- Introduced initial email domain restriction logic using `employer_allowed_domains`
+- Built dynamic email handling (username + domain split)
+- Integrated live summary updates for employer fields
+
+### Issue Identified
+The email domain dropdown was not behaving as expected in the UI despite:
+- Correct database relationships
+- Valid domain data being returned
+- Template logic appearing correct
+
+Additionally, the approach introduced:
+- unnecessary complexity for end users
+- increased validation overhead
+- potential confusion during demos
+
+### Solution
+Refactored the employer email field to be **read-only**:
+- Removed editable email username and domain fields from the UI
+- Displayed the full email address as a disabled input
+- Updated helper text to clarify that email is organisation-managed
+- Simplified backend logic by removing email update handling for employer users
+
+### Outcome
+- Cleaner and more intuitive user experience
+- Reduced validation and edge case complexity
+- Behaviour now aligns with real-world systems where employer emails are centrally controlled
+- Retained domain restriction logic in the database for future enhancement
+
+### Lessons Learned
+- Building the "full solution" first helped validate the data model and relationships
+- Not all technically correct solutions are appropriate for the user experience
+- Simplicity often leads to better usability, especially for demo and portfolio applications
+
+### Next Steps
+- Begin development of Employer Dashboard
+- Implement employer → student visibility
+- Introduce approval workflows for submissions (timesheets, learning records, reviews)

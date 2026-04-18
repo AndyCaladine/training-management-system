@@ -16,7 +16,11 @@
         <section class="register-left">
             <h1>Change Your Details</h1>
             <p class="register-intro">
-                Update your contact details below. Some personal and programme details are managed by your training provider and cannot be changed here.
+                {% if role == "student" %}
+                    Update your contact details below. Some personal and programme details are managed by your training provider and cannot be changed here.
+                {% elif role == "employer" %}
+                    Update your contact details below. Organisation information is managed centrally and cannot be changed here.
+                {% endif %}
             </p>
 
             <form method="POST" id="change-details-form">
@@ -234,25 +238,36 @@
                             </div>
 
                             <div class="form-field">
-                                <label for="contact_name">Contact Name</label>
+                                <label for="first_name">First Name</label>
                                 <input
                                     type="text"
-                                    id="contact_name"
-                                    name="contact_name"
-                                    value="{{ user_details.contact_name or '' }}"
+                                    id="first_name"
+                                    name="first_name"
+                                    value="{{ user_details.first_name or '' }}"
                                     required
                                 >
                             </div>
 
                             <div class="form-field">
-                                <label for="contact_email">Contact Email</label>
+                                <label for="last_name">Last Name</label>
                                 <input
-                                    type="email"
-                                    id="contact_email"
-                                    name="contact_email"
-                                    value="{{ user_details.contact_email or '' }}"
+                                    type="text"
+                                    id="last_name"
+                                    name="last_name"
+                                    value="{{ user_details.last_name or '' }}"
                                     required
                                 >
+                            </div>
+
+                            <div class="form-field form-field-full">
+                                <label for="email_display">Work Email</label>
+                                <input
+                                    type="text"
+                                    id="email_display"
+                                    value="{{ user_details.email or '' }}"
+                                    disabled
+                                >
+                                <small>This is managed by your organisation and cannot be changed here.</small>
                             </div>
                         </div>
                     </div>
@@ -291,8 +306,9 @@
                     </div>
                 {% elif role == "employer" %}
                     <div class="live-summary">
-                        <p><strong>Contact Name:</strong><br><span id="summary-contact-name">{{ user_details.contact_name or '—' }}</span></p>
-                        <p><strong>Contact Email:</strong><br><span id="summary-contact-email">{{ user_details.contact_email or '—' }}</span></p>
+                        <p><strong>First Name:</strong><br><span id="summary-first-name">{{ user_details.first_name or '—' }}</span></p>
+                        <p><strong>Last Name:</strong><br><span id="summary-last-name">{{ user_details.last_name or '—' }}</span></p>
+                        <p><strong>Contact Email:</strong><br><span id="summary-email">{{ user_details.email or '—' }}</span></p>
                     </div>
                 {% endif %}
             </div>
