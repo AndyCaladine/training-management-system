@@ -50,6 +50,14 @@ th {
     color: #374151;
 }
 
+tbody tr:hover {
+    background: #f9fafb;
+}
+
+td:last-child {
+    text-align: right;
+}
+
 /*
 -----------------------------------------------------------
 Table actions

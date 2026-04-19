@@ -3,6 +3,155 @@
 {% block title %}Employer Dashboard{% endblock %}
 
 {% block content %}
-<h2>Employer Dashboard</h2>
-<p>Welcome Employer 🏢</p>
+<div class="container">
+
+    <div class="dashboard-header">
+        <div>
+            <h1>Employer Dashboard</h1>
+            <p class="dashboard-intro">
+                Overview of your students, outstanding actions, exam progress, and compliance attention.
+            </p>
+        </div>
+    </div>
+
+    <div class="dashboard-selector-grid">
+
+        <!-- Student Overview -->
+        <section class="dashboard-selector-card total">
+            <span class="dashboard-selector-title">Student Overview</span>
+            <div class="dashboard-selector-stats">
+                <div class="dashboard-selector-mini">
+                    <small>Total Students</small>
+                    <strong>{{ stats.total_students }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Active Students</small>
+                    <strong>{{ stats.active_students }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Pending Approval</small>
+                    <strong>{{ stats.pending_approval }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Pending Sign-off</small>
+                    <strong>{{ stats.pending_sign_off }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Outstanding Actions -->
+        <section class="dashboard-selector-card draft">
+            <span class="dashboard-selector-title">Outstanding Actions</span>
+            <div class="dashboard-selector-stats">
+                <div class="dashboard-selector-mini">
+                    <small>Pending Timesheets</small>
+                    <strong>{{ stats.pending_timesheets }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Pending Learning Records</small>
+                    <strong>{{ stats.pending_learning_records }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Pending Reviews</small>
+                    <strong>{{ stats.pending_reviews }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Pending Agreements</small>
+                    <strong>{{ stats.pending_agreements }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exam Progress -->
+        <section class="dashboard-selector-card approved">
+            <span class="dashboard-selector-title">Exam Progress</span>
+            <div class="dashboard-selector-stats">
+                <div class="dashboard-selector-mini">
+                    <small>Foundation Completed</small>
+                    <strong>{{ stats.foundation_completed }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Applied Completed</small>
+                    <strong>{{ stats.applied_completed }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Professional Completed</small>
+                    <strong>{{ stats.professional_completed }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Fully Qualified</small>
+                    <strong>{{ stats.fully_qualified }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance Attention -->
+        <section class="dashboard-selector-card rejected">
+            <span class="dashboard-selector-title">Compliance Attention</span>
+            <div class="dashboard-selector-stats">
+                <div class="dashboard-selector-mini">
+                    <small>Overdue Timesheets</small>
+                    <strong>{{ stats.overdue_timesheets }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>No Learning in 6 Months</small>
+                    <strong>{{ stats.no_learning_6_months }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>Overdue Reviews</small>
+                    <strong>{{ stats.overdue_reviews }}</strong>
+                </div>
+                <div class="dashboard-selector-mini">
+                    <small>No Exams in 6 Months</small>
+                    <strong>{{ stats.no_exams_6_months }}</strong>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="register-card card-access">
+        <h2>Your Students</h2>
+
+        {% if students %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Student Number</th>
+                            <th>Cohort</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                <td>{{ student.student_number }}</td>
+                                <td>{{ student.cohort or "—" }}</td>
+                                <td>
+                                    {% if student.registration_status and student.registration_status|lower == "active" %}
+                                        <span class="status-badge approved">Active</span>
+                                    {% elif student.registration_status and student.registration_status|lower == "pending" %}
+                                        <span class="status-badge submitted">Pending</span>
+                                    {% else %}
+                                        <span class="status-badge planned">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="#" class="btn-secondary">View</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No students linked to your organisation yet.</p>
+        {% endif %}
+    </div>
+
+</div>
 {% endblock %}

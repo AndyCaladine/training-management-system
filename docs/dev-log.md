@@ -202,3 +202,48 @@ Refactored the employer email field to be **read-only**:
 - Begin development of Employer Dashboard
 - Implement employer → student visibility
 - Introduce approval workflows for submissions (timesheets, learning records, reviews)
+
+## 19-04-2026 - Employer Dashboard v1
+
+### Summary
+Built the first proper version of the employer dashboard and aligned it with the refactored dashboard design system already used elsewhere in the application.
+
+### What Was Done
+- Replaced the employer dashboard placeholder with a real dashboard route and template
+- Pulled employer-linked students into the dashboard from the database
+- Added grouped summary panels for:
+  - Student Overview
+  - Outstanding Actions
+  - Exam Progress
+  - Compliance Attention
+- Reused the existing dashboard card layout and table wrapper styles
+- Corrected student status display to use `registration_status`
+- Updated employer dashboard statuses to use the existing `status-badge` design system
+
+### Issues Identified
+- Initial dashboard cards were stacking badly and did not match the rest of the app
+- Student statuses were incorrectly showing as inactive
+- Early badge markup did not match the project’s existing badge CSS system
+
+### Solution
+- Reworked the employer dashboard template to reuse the established dashboard selector card structure
+- Fixed the route logic to calculate active students correctly using `registration_status`
+- Updated the table status badges to use the existing reusable badge classes:
+  - `status-badge approved`
+  - `status-badge submitted`
+  - `status-badge planned`
+
+### Outcome
+- Employer dashboard now feels consistent with the wider application
+- Student list is readable and visually aligned with the design system
+- Top-level dashboard panels now better reflect employer workflows and future reporting needs
+
+### Lessons Learned
+- Reusing the existing design system gives a more polished result than creating one-off layouts
+- It is important to match HTML class names to the CSS architecture already in place
+- Building grouped dashboard panels creates a better foundation for future filtered workflows than simple standalone stat cards
+
+### Next Steps
+- Wire real values into the remaining employer dashboard panels
+- Add drill-down / filtered views from dashboard cards
+- Build employer-side student detail view
