@@ -32,11 +32,8 @@
 
     <div class="stat-card rejected">
         <h4>Employer</h4>
-        {% if employer %}
-            <p>{{ employer["company_name"] }}</p>
-            <small>{{ employer["contact_name"] }}</small>
-        {% else %}
-            <p>No employer linked</p>
+        {% if reviewer %}
+            <small>{{ reviewer["first_name"] }} {{ reviewer["last_name"] }}</small>
         {% endif %}
     </div>
 
@@ -175,7 +172,15 @@
 
     <div class="dashboard-header">
         <h3>Timesheets</h3>
-        <a class="button-link" href="{{ url_for('student.add_timesheet') }}">Add Timesheet</a>
+
+        <div class="dashboard-header-actions">
+            <a class="button-link secondary-button" href="{{ url_for('student.time_tracker') }}">
+                Time Tracker
+            </a>
+            <a class="button-link" href="{{ url_for('student.add_timesheet') }}">
+                Add Timesheet
+            </a>
+        </div>
     </div>
 
     <div class="stats-grid">
@@ -207,9 +212,9 @@
                     <label for="reviewer_name"><strong>Submit selected to</strong></label>
                     <select name="reviewer_name" id="reviewer_name" class="table-select">
                         <option value="">Choose reviewer</option>
-                        {% if employer %}
-                            <option value="{{ employer['contact_name'] }}">
-                                {{ employer['contact_name'] }}{% if employer['company_name'] %} - {{ employer['company_name'] }}{% endif %}
+                        {% if reviewer %}
+                            <option value="{{ reviewer['first_name'] }} {{ reviewer['last_name'] }}">
+                                {{ reviewer['first_name'] }} {{ reviewer['last_name'] }}{% if employer['company_name'] %} - {{ employer['company_name'] }}{% endif %}
                             </option>
                         {% endif %}
                     </select>

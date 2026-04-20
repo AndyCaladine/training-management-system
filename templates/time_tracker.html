@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Time Tracker{% endblock %}
+
+{% block content %}
+<h2>Time Tracker</h2>
+<p>Log time as you go, then convert selected entries into an official timesheet.</p>
+
+<div class="dashboard-header">
+    <h3>Add Time Entry</h3>
+</div>
+
+<form method="POST" action="{{ url_for('student.add_time_tracker_entry') }}" class="learning-form form-container tracker-card">
+
+    <label for="entry_date">Date</label>
+    <input
+        type="text"
+        id="entry_date"
+        name="entry_date"
+        class="date-input js-time-tracker-date"
+        required
+    >
+
+    <label for="hours">Hours</label>
+    <input
+        type="number"
+        id="hours"
+        name="hours"
+        step="0.1"
+        min="0.1"
+        required
+    >
+
+    <label for="description">Description</label>
+    <textarea
+        id="description"
+        name="description"
+        rows="3"
+        placeholder="Optional notes about what you worked on"
+    ></textarea>
+
+    <button type="submit" class="btn-primary">
+        Add Entry
+    </button>
+
+</form>
+
+<hr>
+
+<div class="dashboard-header">
+    <h3>Current Tracker Entries</h3>
+</div>
+
+{% if tracker_entries %}
+    <form method="POST" action="{{ url_for('student.convert_time_tracker') }}">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="select_all_entries">
+                        </th>
+                        <th>Date</th>
+                        <th>Hours</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in tracker_entries %}
+                        <tr>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    name="selected_entries"
+                                    value="{{ entry['id'] }}"
+                                    class="js-entry-checkbox"
+                                >
+                            </td>
+                            <td>{{ entry["entry_date"] | format_date }}</td>
+                            <td>{{ entry["hours"] }}</td>
+                            <td>{{ entry["description"] or "-" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="submit-controls">
+            <label for="reviewer_name"><strong>Convert selected for review by</strong></label>
+            <select name="reviewer_name" id="reviewer_name" class="table-select">
+                <option value="">Choose reviewer</option>
+                {% if reviewer %}
+                    <option value="{{ reviewer['first_name'] }} {{ reviewer['last_name'] }}">
+                        {{ reviewer['first_name'] }} {{ reviewer['last_name'] }}{% if employer['company_name'] %} - {{ employer['company_name'] }}{% endif %}
+                    </option>
+                {% endif %}
+            </select>
+        </div>
+
+        <button type="submit" class="button-link secondary-button">
+            Convert to Timesheet
+        </button>
+    </form>
+{% else %}
+    <p>No tracker entries yet.</p>
+{% endif %}
+{% endblock %}
+
+{% block page_js %}
+<!--
+    Time tracker page scripts.
+
+    Loads the shared Flatpickr helper first, then the
+    page-specific controller for the tracker date field.
+-->
+<script src="{{ url_for('static', filename='js/shared/flatpickr-init.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/time-tracker.js') }}"></script>
+{% endblock %}

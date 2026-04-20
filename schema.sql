@@ -52,6 +52,7 @@ DROP TABLE IF EXISTS students;
 DROP TABLE IF EXISTS employers;
 DROP TABLE IF EXISTS exam_modules;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS time_tracker_entries;
 
 
 -- ============================================================
@@ -504,4 +505,24 @@ CREATE TABLE periodic_reviews (
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES students(id),
     FOREIGN KEY (employer_id) REFERENCES employers(id)
+);
+
+-- ============================================================
+-- Time tracker entries
+-- ============================================================
+-- Stores quick time capture rows created by students before
+-- they are converted into an official timesheet entry.
+-- ============================================================
+
+CREATE TABLE time_tracker_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INT NOT NULL,
+    entry_date TEXT NOT NULL,
+    hours REAL NOT NULL,
+    description TEXT,
+    timesheet_id INT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (timesheet_id) REFERENCES timesheets(id)
 );

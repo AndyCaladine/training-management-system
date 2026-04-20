@@ -126,6 +126,22 @@ sections such as timesheets, learning, exams, and reviews.
 
 /*
 -----------------------------------------------------------
+Dashboard section actions
+-----------------------------------------------------------
+Groups action buttons inside individual dashboard section
+headers, such as the Timesheets header actions.
+-----------------------------------------------------------
+*/
+
+.dashboard-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/*
+-----------------------------------------------------------
 Hidden dashboard sections
 -----------------------------------------------------------
 Used by the dashboard page script when switching between
@@ -196,3 +212,4 @@ name, number, and route information.
     line-height: 1.5;
     font-weight: 500;
 }
+

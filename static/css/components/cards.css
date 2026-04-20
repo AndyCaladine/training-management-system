@@ -374,3 +374,16 @@ Used to visually distinguish registration sections.
 .form-card.declarations {
     border-left: 5px solid #f59e0b; /* orange */
 }
+
+/*
+-----------------------------------------------------------
+Tracker card
+-----------------------------------------------------------
+Subtle accent to align with timesheet functionality without
+overpowering the UI.
+-----------------------------------------------------------
+*/
+
+.tracker-card {
+    border-left: 4px solid #2563eb; /* same blue as timesheets */
+}

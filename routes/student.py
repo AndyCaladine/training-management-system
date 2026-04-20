@@ -7,6 +7,32 @@ from utils.db import get_db_connection
 
 student_bp = Blueprint("student", __name__)
 
+#Helper function for reviewer
+def get_primary_reviewer(conn, employer_id):
+    if not employer_id:
+        return None
+
+    return conn.execute(
+        """
+        SELECT *
+        FROM employer_contacts
+        WHERE employer_id = ?
+        AND is_primary_contact = 1
+        AND registration_status = 'active'
+        LIMIT 1
+        """,
+        (employer_id,)
+    ).fetchone()
+
+
+def get_reviewer_full_name(reviewer):
+    if not reviewer:
+        return ""
+
+    first_name = (reviewer["first_name"] or "").strip()
+    last_name = (reviewer["last_name"] or "").strip()
+    return f"{first_name} {last_name}".strip()
+
 #Student logic to maintan the student application dashboard. 
 @student_bp.route("/student")
 def student_dashboard():
@@ -22,6 +48,7 @@ def student_dashboard():
 
     agreement = None
     employer = None
+    reviewer = None
     timesheets = []
     learning_records = []
     exam_results = []
@@ -72,6 +99,8 @@ def student_dashboard():
                 "SELECT * FROM employers WHERE id = ?",
                 (student["employer_id"],)
             ).fetchone()
+
+            reviewer = get_primary_reviewer(conn, student["employer_id"])
 
         timesheets = conn.execute(
             """
@@ -205,6 +234,7 @@ def student_dashboard():
         student=student,
         agreement=agreement,
         employer=employer,
+        reviewer=reviewer,
         timesheets=timesheets,
         learning_records=learning_records,
         exam_results=exam_results,
@@ -237,6 +267,291 @@ def student_dashboard():
         review_approved_count=review_approved_count,
         review_rejected_count=review_rejected_count
     )
+
+#Function for the time tracker helper for timesheets
+@student_bp.route("/student/time-tracker")
+def time_tracker():
+    if "user_id" not in session or session.get("role") != "student":
+        return redirect(url_for("login"))
+
+    conn = get_db_connection()
+
+    student = conn.execute(
+        "SELECT * FROM students WHERE user_id = ?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if not student:
+        conn.close()
+        flash("No student profile found.", "error")
+        return redirect(url_for("student.student_dashboard"))
+
+    employer = None
+    reviewer = None
+
+    if student["employer_id"]:
+        employer = conn.execute(
+            "SELECT * FROM employers WHERE id = ?",
+            (student["employer_id"],)
+        ).fetchone()
+
+        reviewer = get_primary_reviewer(conn, student["employer_id"])
+
+    tracker_entries = conn.execute(
+        """
+        SELECT *
+        FROM time_tracker_entries
+        WHERE student_id = ?
+        AND timesheet_id IS NULL
+        ORDER BY entry_date DESC, id DESC
+        """,
+        (student["id"],)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "time_tracker.html",
+        student=student,
+        employer=employer,
+        reviewer=reviewer,
+        tracker_entries=tracker_entries
+    )
+
+@student_bp.route("/student/time-tracker/add", methods=["POST"])
+def add_time_tracker_entry():
+    if "user_id" not in session or session.get("role") != "student":
+        return redirect(url_for("login"))
+
+    entry_date = request.form["entry_date"]
+    hours = request.form["hours"]
+    description = request.form.get("description", "").strip()
+
+    conn = get_db_connection()
+
+    student = conn.execute(
+        "SELECT * FROM students WHERE user_id = ?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if not student:
+        conn.close()
+        flash("No student profile found.", "error")
+        return redirect(url_for("student.student_dashboard"))
+
+    try:
+        hours_value = float(hours)
+        if hours_value <= 0:
+            raise ValueError
+    except ValueError:
+        conn.close()
+        flash("Hours must be greater than 0.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    conn.execute(
+        """
+        INSERT INTO time_tracker_entries (
+            student_id, entry_date, hours, description
+        )
+        VALUES (?, ?, ?, ?)
+        """,
+        (
+            student["id"],
+            entry_date,
+            hours_value,
+            description or None
+        )
+    )
+
+    conn.commit()
+    conn.close()
+
+    flash("Time entry added.", "success")
+    return redirect(url_for("student.time_tracker"))
+
+#Convert function to change timesheet entries 
+@student_bp.route("/student/time-tracker/convert", methods=["POST"])
+def convert_time_tracker():
+    if "user_id" not in session or session.get("role") != "student":
+        return redirect(url_for("login"))
+
+    selected_ids = request.form.getlist("selected_entries")
+    reviewer_name = request.form.get("reviewer_name", "").strip()
+
+    if not selected_ids:
+        flash("Please select at least one tracker entry.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    if not reviewer_name:
+        flash("Please choose a reviewer.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    conn = get_db_connection()
+
+    student = conn.execute(
+        "SELECT * FROM students WHERE user_id = ?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if not student:
+        conn.close()
+        flash("No student profile found.", "error")
+        return redirect(url_for("student.student_dashboard"))
+
+    agreement = conn.execute(
+        "SELECT * FROM training_agreements WHERE student_id = ?",
+        (student["id"],)
+    ).fetchone()
+
+    if not agreement:
+        conn.close()
+        flash("No training agreement found.", "error")
+        return redirect(url_for("student.student_dashboard"))
+
+    employer = None
+    reviewer = None
+
+    if student["employer_id"]:
+        employer = conn.execute(
+            "SELECT * FROM employers WHERE id = ?",
+            (student["employer_id"],)
+        ).fetchone()
+
+        reviewer = get_primary_reviewer(conn, student["employer_id"])
+
+    if not employer:
+        conn.close()
+        flash("No linked employer found.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    if not reviewer:
+        conn.close()
+        flash("No active primary reviewer found for your employer.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    allowed_reviewer = get_reviewer_full_name(reviewer)
+
+    if reviewer_name != allowed_reviewer:
+        conn.close()
+        flash("You can only convert to your linked employer reviewer.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    placeholders = ",".join("?" for _ in selected_ids)
+
+    tracker_entries = conn.execute(
+        f"""
+        SELECT *
+        FROM time_tracker_entries
+        WHERE id IN ({placeholders})
+        AND student_id = ?
+        AND timesheet_id IS NULL
+        ORDER BY entry_date ASC, id ASC
+        """,
+        (*selected_ids, student["id"])
+    ).fetchall()
+
+    if not tracker_entries:
+        conn.close()
+        flash("No valid tracker entries were found.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    last_timesheet = conn.execute(
+        """
+        SELECT * FROM timesheets
+        WHERE student_id = ?
+        ORDER BY end_date DESC
+        LIMIT 1
+        """,
+        (student["id"],)
+    ).fetchone()
+
+    if last_timesheet:
+        default_start_date = (
+            datetime.strptime(last_timesheet["end_date"], "%Y-%m-%d") + timedelta(days=1)
+        ).strftime("%Y-%m-%d")
+    else:
+        default_start_date = agreement["start_date"]
+
+    start_date = default_start_date
+    end_date = tracker_entries[-1]["entry_date"]
+
+    total_hours = sum((entry["hours"] or 0) for entry in tracker_entries)
+    total_days = round(total_hours / 7, 2)
+
+    start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+    end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+
+    if end_dt < start_dt:
+        conn.close()
+        flash("Selected tracker entries end before the next allowed timesheet start date.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    if end_dt > start_dt + timedelta(days=183):
+        conn.close()
+        flash("Your timesheet entry cannot be more than 6 months.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    agreement_start = datetime.strptime(agreement["start_date"], "%Y-%m-%d")
+    agreement_end = datetime.strptime(agreement["end_date"], "%Y-%m-%d")
+
+    if start_dt < agreement_start or end_dt > agreement_end:
+        conn.close()
+        flash("Timesheet dates must be within your agreement dates.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    overlapping = conn.execute(
+        """
+        SELECT * FROM timesheets
+        WHERE student_id = ?
+        AND NOT (
+            end_date < ? OR start_date > ?
+        )
+        """,
+        (student["id"], start_date, end_date)
+    ).fetchone()
+
+    if overlapping:
+        conn.close()
+        flash("Your entry overlaps an existing timesheet entry.", "error")
+        return redirect(url_for("student.time_tracker"))
+
+    cursor = conn.execute(
+        """
+        INSERT INTO timesheets (
+            student_id, agreement_id, start_date, end_date, total_days, reviewer_name
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (
+            student["id"],
+            agreement["id"],
+            start_date,
+            end_date,
+            total_days,
+            reviewer_name
+        )
+    )
+
+    timesheet_id = cursor.lastrowid
+
+    valid_ids = [entry["id"] for entry in tracker_entries]
+    valid_placeholders = ",".join("?" for _ in valid_ids)
+
+    conn.execute(
+        f"""
+        UPDATE time_tracker_entries
+        SET timesheet_id = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id IN ({valid_placeholders})
+        AND student_id = ?
+        """,
+        (timesheet_id, *valid_ids, student["id"])
+    )
+
+    conn.commit()
+    conn.close()
+
+    flash("Tracker entries converted into a timesheet successfully.", "success")
+    return redirect(url_for("student.student_dashboard"))
 
 #Function for the Timesheet Add
 @student_bp.route("/student/timesheets/add", methods=["GET", "POST"])
@@ -580,19 +895,28 @@ def submit_timesheets():
         flash("No student profile found.", "error")
         return redirect(url_for("student.student_dashboard"))
 
-    employer = None
-    if student["employer_id"]:
-        employer = conn.execute(
-            "SELECT * FROM employers WHERE id = ?",
-            (student["employer_id"],)
-        ).fetchone()
+        employer = None
+        reviewer = None
 
-    if not employer:
-        conn.close()
-        flash("No linked employer found.", "error")
-        return redirect(url_for("student.student_dashboard"))
+        if student["employer_id"]:
+            employer = conn.execute(
+                "SELECT * FROM employers WHERE id = ?",
+                (student["employer_id"],)
+            ).fetchone()
 
-    allowed_reviewer = (employer["contact_name"] or "").strip()
+            reviewer = get_primary_reviewer(conn, student["employer_id"])
+
+        if not employer:
+            conn.close()
+            flash("No linked employer found.", "error")
+            return redirect(url_for("student.student_dashboard"))
+
+        if not reviewer:
+            conn.close()
+            flash("No active primary reviewer found for your employer.", "error")
+            return redirect(url_for("student.student_dashboard"))
+
+        allowed_reviewer = get_reviewer_full_name(reviewer)
 
     if reviewer_name != allowed_reviewer:
         conn.close()
@@ -1009,18 +1333,27 @@ def submit_learning_records():
         return redirect(url_for("student.student_dashboard"))
 
     employer = None
+    reviewer = None
+
     if student["employer_id"]:
         employer = conn.execute(
             "SELECT * FROM employers WHERE id = ?",
             (student["employer_id"],)
         ).fetchone()
 
+        reviewer = get_primary_reviewer(conn, student["employer_id"])
+
     if not employer:
         conn.close()
         flash("No linked employer found.", "error")
         return redirect(url_for("student.student_dashboard"))
 
-    allowed_reviewer = (employer["contact_name"] or "").strip()
+    if not reviewer:
+        conn.close()
+        flash("No active primary reviewer found for your employer.", "error")
+        return redirect(url_for("student.student_dashboard"))
+
+    allowed_reviewer = get_reviewer_full_name(reviewer)
 
     if reviewer_name != allowed_reviewer:
         conn.close()
@@ -1145,11 +1478,15 @@ def add_periodic_review():
         return redirect(url_for("student.student_dashboard"))
 
     employer = None
+    reviewer = None
+
     if student["employer_id"]:
         employer = conn.execute(
             "SELECT * FROM employers WHERE id = ?",
             (student["employer_id"],)
         ).fetchone()
+
+    reviewer = get_primary_reviewer(conn, student["employer_id"])
 
     last_review = conn.execute(
         """
@@ -1324,7 +1661,7 @@ def add_periodic_review():
                 challenges_last_period or None,
                 goals_next_period or None,
                 support_needed or None,
-                employer["contact_name"] if employer else None,
+                get_reviewer_full_name(reviewer) if reviewer else None,
                 "draft"
             )
         )
@@ -1616,18 +1953,27 @@ def submit_periodic_reviews():
         return redirect(url_for("student.student_dashboard"))
 
     employer = None
+    reviewer = None
+
     if student["employer_id"]:
         employer = conn.execute(
             "SELECT * FROM employers WHERE id = ?",
             (student["employer_id"],)
         ).fetchone()
 
+        reviewer = get_primary_reviewer(conn, student["employer_id"])
+
     if not employer:
         conn.close()
         flash("No linked employer found.", "error")
         return redirect(url_for("student.student_dashboard"))
 
-    allowed_reviewer = (employer["contact_name"] or "").strip()
+    if not reviewer:
+        conn.close()
+        flash("No active primary reviewer found for your employer.", "error")
+        return redirect(url_for("student.student_dashboard"))
+
+    allowed_reviewer = get_reviewer_full_name(reviewer)
 
     if reviewer_name != allowed_reviewer:
         conn.close()
