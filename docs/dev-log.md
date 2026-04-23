@@ -247,3 +247,108 @@ Built the first proper version of the employer dashboard and aligned it with the
 - Wire real values into the remaining employer dashboard panels
 - Add drill-down / filtered views from dashboard cards
 - Build employer-side student detail view
+
+## 23-04-2026 – UI Refactor & Keystone Branding
+
+Today focused on a full UI refactor and introducing consistent branding across the application.
+
+### Keystone Branding
+
+Created a name and identity for the application: **Keystone** with the tagline *“The foundation behind every milestone.”*
+
+Designed a logo and favicon and integrated them into the application:
+
+* Added logo to the main navigation bar
+* Added favicon across the site
+* Updated layout so the logo, system title, and user controls sit on a single aligned row
+
+### Design System & Colour Refactor
+
+Introduced a centralised design system using CSS variables.
+
+* Created a `variables.css` file to hold:
+
+  * Core brand colours
+  * Backgrounds
+  * Borders
+  * Text colours
+  * Shadows
+  * Border radius values
+
+* Refactored existing CSS to use variables instead of hardcoded values across:
+
+  * Navigation
+  * Cards
+  * Buttons
+  * Badges
+  * Tables
+  * Forms
+  * Filters
+
+This allows the application to be rebranded in future by updating a single file rather than multiple CSS files.
+
+### Layout Improvements
+
+* Reworked the navbar to:
+
+  * Use a fixed height for consistency
+  * Properly align logo, title, and user menu
+  * Match the Keystone dark theme (#01081a)
+
+* Moved the system title into the navbar and removed the duplicate header bar
+
+### Component Consistency
+
+Standardised UI components to align with the new design system:
+
+* **Cards**
+
+  * Unified spacing, shadows, and border styling
+  * Improved dashboard readability
+
+* **Buttons**
+
+  * Introduced consistent hover, active, and focus states
+  * Aligned primary/secondary actions with brand colours
+
+* **Badges**
+
+  * Refactored status indicators to use muted, consistent tones
+  * Reduced visual noise and improved hierarchy
+
+* **Tables**
+
+  * Updated headers, hover states, and borders
+  * Improved readability and alignment with card styles
+
+* **Forms**
+
+  * Standardised inputs, focus states, and layout
+  * Improved accessibility and visual consistency
+
+* **Filters**
+
+  * Simplified filter controls
+  * Introduced subtle active states
+  * Removed heavy styling to better support data-first views
+
+### Navigation & User Menu Fixes
+
+Resolved multiple issues with the user dropdown menu:
+
+* Fixed dropdown incorrectly affecting navbar height
+* Restored proper absolute positioning so the menu floats correctly
+* Added a small hover buffer to prevent menu flickering when moving cursor
+* Fixed link styling so menu items display correctly as stacked options
+* Reintroduced clear hover feedback for menu items
+
+### Outcome
+
+The application now has:
+
+* A consistent visual identity (Keystone)
+* A scalable design system
+* Cleaner, more professional UI
+* Easier maintainability for future changes
+
+This moves the project from a styled prototype towards a production-quality interface.

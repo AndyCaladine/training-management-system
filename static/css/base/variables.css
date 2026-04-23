@@ -1,21 +1,89 @@
 /*
 ===========================================================
-Base utilities
+Design Tokens (Keystone Theme)
 -----------------------------------------------------------
-Small reusable helper classes used across multiple pages.
-
-Rules:
-- Keep utilities simple and generic.
-- Do not place component-specific or page-specific styling here.
+Central source of truth for colours, spacing, typography.
+All other CSS files should reference these variables.
 ===========================================================
 */
 
-.muted-text {
-    color: #9ca3af;
-}
+:root {
 
-.input-error {
-    border: 2px solid red !important;
-    background-color: #ffe5e5 !important;
-    outline: none;
+    /*
+    -------------------------------------------------------
+    Core backgrounds
+    -------------------------------------------------------
+    */
+
+    --color-bg-page: #F5F7FB;
+    --color-bg-navbar: #01081a;
+    --color-bg-card: #FFFFFF;
+
+    /*
+    -------------------------------------------------------
+    Borders & surfaces
+    -------------------------------------------------------
+    */
+
+    --color-border: #E5E7EB;
+    --color-border-subtle: #F1F5F9;
+
+    /*
+    -------------------------------------------------------
+    Text
+    -------------------------------------------------------
+    */
+
+    --color-text-primary: #111827;
+    --color-text-secondary: #6B7280;
+    --color-text-inverse: #E5E7EB;
+
+    /*
+    -------------------------------------------------------
+    Keystone brand palette (muted)
+    -------------------------------------------------------
+    */
+
+    --color-brand-peach: #E8CBAF;
+    --color-brand-sand: #E2D3A8;
+    --color-brand-green: #C7D8B6;
+    --color-brand-blue: #7FAACF;
+    --color-brand-blue-soft: #9FC7D8;
+
+    /*
+    -------------------------------------------------------
+    Functional colours
+    -------------------------------------------------------
+    */
+
+    --color-success: #6FCF97;
+    --color-warning: #F2C94C;
+    --color-danger: #EB5757;
+
+    /*
+    -------------------------------------------------------
+    Primary UI colour
+    -------------------------------------------------------
+    */
+
+    --color-primary: var(--color-brand-blue);
+
+    /*
+    -------------------------------------------------------
+    Shadows
+    -------------------------------------------------------
+    */
+
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+    /*
+    -------------------------------------------------------
+    Radius
+    -------------------------------------------------------
+    */
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
 }

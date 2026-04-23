@@ -55,11 +55,11 @@ sections such as timesheets, learning, exams, and reviews.
 }
 
 .dashboard-selector-card {
-    background: white;
-    border: none;
-    border-radius: 14px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
     padding: 1.25rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
     text-align: left;
     font: inherit;
     cursor: pointer;
@@ -67,15 +67,15 @@ sections such as timesheets, learning, exams, and reviews.
 }
 
 .dashboard-selector-card.approved {
-    border-left: 5px solid #16a34a;
+    border-left: 5px solid var(--color-success);
 }
 
 .dashboard-selector-card.draft {
-    border-left: 5px solid #2563eb;
+    border-left: 5px solid var(--color-primary);
 }
 
 .dashboard-selector-card.rejected {
-    border-left: 5px solid #dc2626;
+    border-left: 5px solid var(--color-danger);
 }
 
 .dashboard-selector-card.total {
@@ -83,12 +83,12 @@ sections such as timesheets, learning, exams, and reviews.
 }
 
 .dashboard-selector-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .dashboard-selector-card.active {
-    outline: 3px solid rgba(37, 99, 235, 0.18);
+    outline: 2px solid var(--color-primary);
     transform: translateY(-2px);
 }
 
@@ -97,7 +97,7 @@ sections such as timesheets, learning, exams, and reviews.
     margin-bottom: 0.85rem;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--color-text-primary);
 }
 
 .dashboard-selector-stats {
@@ -107,7 +107,7 @@ sections such as timesheets, learning, exams, and reviews.
 }
 
 .dashboard-selector-mini {
-    background: #f9fafb;
+    background: var(--color-border-subtle);
     border-radius: 10px;
     padding: 0.75rem;
 }
@@ -115,13 +115,13 @@ sections such as timesheets, learning, exams, and reviews.
 .dashboard-selector-mini small {
     display: block;
     margin-bottom: 0.25rem;
-    color: #4b5563;
+    color: var(--color-text-secondary);
     font-size: 0.85rem;
 }
 
 .dashboard-selector-mini strong {
     font-size: 1.35rem;
-    color: #111827;
+    color: var(--color-text-primary);
 }
 
 /*
@@ -213,3 +213,25 @@ name, number, and route information.
     font-weight: 500;
 }
 
+/*
+-----------------------------------------------------------
+Responsive layout adjustments
+-----------------------------------------------------------
+Keeps dashboard controls and selector cards readable on
+smaller screens.
+-----------------------------------------------------------
+*/
+
+@media (max-width: 700px) {
+    .dashboard-header,
+    .dashboard-selector-header,
+    .dashboard-selector-actions,
+    .dashboard-header-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-selector-grid {
+        grid-template-columns: 1fr;
+    }
+}

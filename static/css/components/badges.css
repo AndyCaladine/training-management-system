@@ -19,35 +19,37 @@ Shared pill-style appearance for all statuses.
     display: inline-block;
     padding: 0.35rem 0.7rem;
     border-radius: 999px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 /*
 -----------------------------------------------------------
 Approval workflow badge variants
 -----------------------------------------------------------
-Used for draft, submitted, approved, and rejected states.
+Muted Keystone-friendly tones (less neon, more product).
 -----------------------------------------------------------
 */
 
 .status-badge.draft {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: rgba(127, 170, 207, 0.15);
+    color: var(--color-primary);
 }
 
 .status-badge.submitted {
-    background: #ede9fe;
+    background: rgba(124, 58, 237, 0.15);
     color: #6d28d9;
 }
 
 .status-badge.approved {
-    background: #dcfce7;
+    background: rgba(111, 207, 151, 0.18);
     color: #166534;
 }
 
 .status-badge.rejected {
-    background: #fee2e2;
+    background: rgba(235, 87, 87, 0.15);
     color: #991b1b;
 }
 
@@ -55,22 +57,20 @@ Used for draft, submitted, approved, and rejected states.
 -----------------------------------------------------------
 Learning record status badge variants
 -----------------------------------------------------------
-Used for planned, in-progress, and completed learning states.
------------------------------------------------------------
 */
 
 .status-badge.planned {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--color-border-subtle);
+    color: var(--color-text-secondary);
 }
 
 .status-badge.in_progress {
-    background: #fef3c7;
+    background: rgba(242, 201, 76, 0.2);
     color: #92400e;
 }
 
 .status-badge.completed {
-    background: #dcfce7;
+    background: rgba(111, 207, 151, 0.18);
     color: #166534;
 }
 
@@ -78,32 +78,30 @@ Used for planned, in-progress, and completed learning states.
 -----------------------------------------------------------
 Exam result badge variants
 -----------------------------------------------------------
-Used in the exams tracker and related views.
------------------------------------------------------------
 */
 
 .status-badge.not_attempted {
-    background: #f3f4f6;
-    color: #374151;
+    background: var(--color-border-subtle);
+    color: var(--color-text-secondary);
 }
 
 .status-badge.booked {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: rgba(127, 170, 207, 0.15);
+    color: var(--color-primary);
 }
 
 .status-badge.sat {
-    background: #fef3c7;
+    background: rgba(242, 201, 76, 0.2);
     color: #92400e;
 }
 
 .status-badge.passed {
-    background: #dcfce7;
+    background: rgba(111, 207, 151, 0.18);
     color: #166534;
 }
 
 .status-badge.failed {
-    background: #fee2e2;
+    background: rgba(235, 87, 87, 0.15);
     color: #991b1b;
 }
 
@@ -118,7 +116,7 @@ Used for completed exam levels and similar milestones.
 .completion-badge {
     display: inline-block;
     margin-top: 0.5rem;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: #166534;
 }

@@ -4,51 +4,54 @@
     <!--
         Base template head section.
 
-        This file provides the shared layout for the whole application.
-        Global assets are loaded here once, while individual pages can inject
-        extra CSS or JavaScript using the page_css and page_js blocks.
+        Shared layout for the entire application.
+        Global assets are loaded here once, with optional
+        per-page CSS and JS blocks.
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{% block title %}Training System{% endblock %}</title>
 
-    <!-- Global application stylesheet -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <!-- Global stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     
-    <!-- Flatpickr stylesheet for pages that use date pickers -->
+    <!-- Flatpickr (date picker) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-    <!-- Shared font used across the application -->
+    <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!--
-        Page-specific CSS hook.
-
-        Use this block when a page needs extra styling that should not be loaded
-        across the whole application.
-    -->
     {% block page_css %}{% endblock %}
 </head>
 
 <body>
-    <!--
-        Shared application header.
 
-        Logged-in users see quick account navigation.
-        Logged-out users see a login button instead.
+    <!--
+        Unified application navbar.
+
+        Left: Logo + system title
+        Right: Navigation + user menu
     -->
-    <header class="app-header">
-        <div class="header-left">
-            <h1 class="app-title">Training Management System</h1>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="{{ url_for('student.student_dashboard') }}" class="navbar-brand">
+                <img
+                    src="{{ url_for('static', filename='images/keystone.png') }}"
+                    alt="Keystone Logo"
+                    class="nav-logo"
+                >
+                <span class="app-title-inline">Training Management System</span>
+            </a>
         </div>
 
-        <div class="header-right">
+        <div class="navbar-right">
             {% if session.get('user_id') %}
 
                 {% if request.endpoint != 'student.student_dashboard' %}
@@ -76,18 +79,13 @@
                 </a>
             {% endif %}
         </div>
-    </header>
+    </nav>
 
-    <!-- Main page content -->
+    <!-- Main content -->
     <main>
         {% block content %}{% endblock %}
 
-        <!--
-            Shared flash message area.
-
-            Any flashed success, warning, or error messages are rendered here
-            so all pages get consistent user feedback.
-        -->
+        <!-- Flash messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -97,20 +95,10 @@
         {% endwith %}
     </main>
 
-    <!-- Shared third-party library for date-picker-enabled forms -->
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <!-- Global application JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-    <!--
-        Page-specific JavaScript hook.
-
-        Load shared helpers first, then the page file itself.
-        Example:
-        - js/shared/filters.js
-        - js/pages/student-dashboard.js
-    -->
     {% block page_js %}{% endblock %}
 </body>
 </html>

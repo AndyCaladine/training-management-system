@@ -23,35 +23,37 @@ Used across dashboards and summary sections.
 }
 
 .stat-card {
-    background: white;
-    border-radius: 14px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
     padding: 1.25rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
 }
 
 .stat-card h4 {
     margin: 0 0 0.75rem 0;
     font-size: 0.95rem;
-    color: #4b5563;
+    color: var(--color-text-secondary);
+    font-weight: 600;
 }
 
 .stat-card p {
     margin: 0;
     font-size: 2rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--color-text-primary);
 }
 
 .stat-card.approved {
-    border-left: 5px solid #16a34a;
+    border-left: 5px solid var(--color-success);
 }
 
 .stat-card.draft {
-    border-left: 5px solid #2563eb;
+    border-left: 5px solid var(--color-primary);
 }
 
 .stat-card.rejected {
-    border-left: 5px solid #dc2626;
+    border-left: 5px solid var(--color-danger);
 }
 
 .stat-card.total {
@@ -67,23 +69,24 @@ Used on student-facing dashboard pages and review pages.
 */
 
 .profile-card {
-    background: linear-gradient(135deg, #1f2937, #374151);
-    color: white;
+    background: linear-gradient(135deg, #16233a, #334155);
+    color: #ffffff;
     padding: 1.5rem 2rem;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     margin-bottom: 1.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .profile-main h2 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    color: #ffffff;
 }
 
 .profile-meta {
     margin-top: 0.5rem;
-    opacity: 0.85;
-    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
 }
 
 .agreement-grid {
@@ -99,7 +102,7 @@ Used on student-facing dashboard pages and review pages.
 
 .agreement-grid .stat-card h4 {
     font-size: 0.85rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     margin-bottom: 0.4rem;
 }
 
@@ -128,11 +131,12 @@ Used on login and related auth pages.
 }
 
 .auth-card {
-    background: #ffffff;
+    background: var(--color-bg-card);
     padding: 1.5rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     margin-bottom: 1.5rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
     position: relative;
 }
 
@@ -143,15 +147,15 @@ Used on login and related auth pages.
     top: 0;
     bottom: 0;
     width: 6px;
-    border-radius: 12px 0 0 12px;
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
 }
 
 .login-card::before {
-    background: #3b82f6;
+    background: var(--color-primary);
 }
 
 .student-card::before {
-    background: #6a3df0;
+    background: #7c3aed;
 }
 
 .employer-card::before {
@@ -171,10 +175,10 @@ Used across registration, change-details, and related flows.
 .agreement-preview-box,
 .scroll-doc-box,
 .signature-box {
-    background: #ffffff;
+    background: var(--color-bg-card);
     border-radius: 18px;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-    border: 1px solid #e7ebf0;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
 }
 
 .register-card {
@@ -188,6 +192,7 @@ Used across registration, change-details, and related flows.
     margin: 0 0 1.25rem 0;
     font-size: 1.8rem;
     line-height: 1.2;
+    color: var(--color-text-primary);
 }
 
 .live-summary-card,
@@ -212,6 +217,7 @@ Used across registration, change-details, and related flows.
 .signature-box h3 {
     margin: 0 0 0.85rem 0;
     font-size: 1.35rem;
+    color: var(--color-text-primary);
 }
 
 .agreement-preview-box p,
@@ -228,11 +234,11 @@ These create visual grouping within large forms.
 */
 
 .card-access {
-    border-left: 6px solid #3b82f6;
+    border-left: 6px solid var(--color-primary);
 }
 
 .card-account {
-    border-left: 6px solid #6a3df0;
+    border-left: 6px solid #7c3aed;
 }
 
 .card-agreement {
@@ -252,11 +258,11 @@ Used for non-register-card summary and preview panels.
 */
 
 .accent-blue {
-    border-left: 6px solid #3b82f6;
+    border-left: 6px solid var(--color-primary);
 }
 
 .accent-purple {
-    border-left: 6px solid #6a3df0;
+    border-left: 6px solid #7c3aed;
 }
 
 .accent-teal {
@@ -310,7 +316,7 @@ Used on registration and declaration flows.
 
 .signature-date {
     font-size: 0.95rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     margin: 0;
 }
 
@@ -324,17 +330,18 @@ alongside the review form.
 */
 
 .review-context-card {
-    background: white;
-    border-radius: 16px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
     padding: 1.25rem;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
 }
 
 .review-context-card h3 {
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 1rem;
-    color: #111827;
+    color: var(--color-text-primary);
 }
 
 /*
@@ -353,6 +360,14 @@ Keeps larger card-based layouts readable on mobile.
     .signature-box {
         padding: 1rem;
     }
+
+    .profile-card {
+        padding: 1.25rem 1.25rem;
+    }
+
+    .profile-main h2 {
+        font-size: 1.65rem;
+    }
 }
 
 /*
@@ -364,15 +379,15 @@ Used to visually distinguish registration sections.
 */
 
 .form-card.contact {
-    border-left: 5px solid #3b82f6; /* blue */
+    border-left: 5px solid var(--color-primary);
 }
 
 .form-card.security {
-    border-left: 5px solid #7c3aed; /* purple */
+    border-left: 5px solid #7c3aed;
 }
 
 .form-card.declarations {
-    border-left: 5px solid #f59e0b; /* orange */
+    border-left: 5px solid #f59e0b;
 }
 
 /*
@@ -385,5 +400,5 @@ overpowering the UI.
 */
 
 .tracker-card {
-    border-left: 4px solid #2563eb; /* same blue as timesheets */
+    border-left: 4px solid var(--color-primary);
 }

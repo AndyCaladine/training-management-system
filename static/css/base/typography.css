@@ -10,9 +10,20 @@ element-level typography rather than component styling.
 */
 
 body {
-    font-family: Arial, sans-serif;
-    color: #111827;
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    font-size: 16px;
 }
+
+/*
+-----------------------------------------------------------
+Headings
+-----------------------------------------------------------
+Clear, modern heading scale for dashboards, forms, and
+section titles across the application.
+-----------------------------------------------------------
+*/
 
 h1,
 h2,
@@ -20,13 +31,84 @@ h3,
 h4,
 h5,
 h6 {
-    color: #111827;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
+    font-weight: 700;
+    line-height: 1.2;
 }
+
+h1 {
+    font-size: 2.25rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h3 {
+    font-size: 1.35rem;
+}
+
+h4 {
+    font-size: 1.15rem;
+}
+
+h5 {
+    font-size: 1rem;
+}
+
+h6 {
+    font-size: 0.9rem;
+}
+
+/*
+-----------------------------------------------------------
+Body text
+-----------------------------------------------------------
+Used for standard explanatory text, labels, and supporting
+copy across the application.
+-----------------------------------------------------------
+*/
 
 p {
+    margin-top: 0;
+    margin-bottom: 1rem;
     line-height: 1.6;
+    color: var(--color-text-primary);
 }
 
+/*
+-----------------------------------------------------------
+Links
+-----------------------------------------------------------
+Uses the Keystone primary colour for a cleaner, more
+consistent system feel.
+-----------------------------------------------------------
+*/
+
 a {
-    color: #2563eb;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover,
+a:focus {
+    color: var(--color-brand-blue-soft);
+    outline: none;
+}
+
+/*
+-----------------------------------------------------------
+Small text and muted text helpers
+-----------------------------------------------------------
+Useful for secondary content such as metadata, supporting
+descriptions, and quieter labels.
+-----------------------------------------------------------
+*/
+
+small {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
 }

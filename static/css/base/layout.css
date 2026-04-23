@@ -11,9 +11,33 @@ the whole application, not page-specific styling.
 
 body {
     margin: 0;
-    background: #f4f6f8;
+    font-family: 'Inter', sans-serif;
+    background: var(--color-bg-page);
+    color: var(--color-text-primary);
 }
 
+/*
+-----------------------------------------------------------
+Main content container
+-----------------------------------------------------------
+Controls spacing and max width of the app content.
+-----------------------------------------------------------
+*/
+
 main {
-    padding: 2rem;
+    padding: 2rem 2.5rem;
+}
+
+/*
+-----------------------------------------------------------
+Optional content wrapper (use later if needed)
+-----------------------------------------------------------
+Keeps content nicely centred on larger screens.
+-----------------------------------------------------------
+*/
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
 }

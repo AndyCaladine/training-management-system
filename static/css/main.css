@@ -8,10 +8,12 @@ Structure:
 - Base files define global foundations such as layout, text,
   and utility helpers.
 - Component files define reusable UI patterns.
-- Page files will be added as the refactor continues.
+- Page files define page-specific styling.
 ===========================================================
 */
 
+@import url("./base/variables.css");
+@import url("./base/reset.css");
 @import url("./base/layout.css");
 @import url("./base/typography.css");
 @import url("./base/utilities.css");
@@ -24,7 +26,10 @@ Structure:
 @import url("./components/tables.css");
 @import url("./components/badges.css");
 @import url("./components/filters.css");
+@import url("./components/auth.css");
 
 @import url("./pages/registration.css");
 @import url("./pages/student-dashboard.css");
 @import url("./pages/auth.css");
+@import url("./pages/periodic-review.css");
+@import url("./pages/student-export.css");

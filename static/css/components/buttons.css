@@ -21,18 +21,29 @@ Used for key submit/save actions.
 
 .btn-primary {
     width: 100%;
-    background: #3b82f6;
-    color: white;
+    background: var(--color-primary);
+    color: #ffffff;
     padding: 0.8rem 1rem;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 700;
     font-size: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-primary:hover {
-    opacity: 0.95;
+.btn-primary:hover,
+.btn-primary:focus {
+    background: var(--color-brand-blue-soft);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    outline: none;
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
 }
 
 /*
@@ -46,19 +57,30 @@ and supportive form actions.
 
 .btn-secondary {
     display: inline-block;
-    background: #6a3df0;
-    color: white;
+    background: #7c3aed;
+    color: #ffffff;
     padding: 0.75rem 1rem;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     text-decoration: none;
     border: none;
     cursor: pointer;
     font-weight: 600;
     text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-secondary:hover {
-    opacity: 0.95;
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: #6d28d9;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    outline: none;
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
 }
 
 /*
@@ -70,27 +92,42 @@ Used across dashboards, table actions, and page actions.
 */
 
 .button-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.8rem 1.2rem;
-    border-radius: 10px;
-    background: #2563eb;
-    color: white;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: #ffffff;
     text-decoration: none;
     font-weight: 600;
     border: none;
     cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.button-link:hover {
-    opacity: 0.95;
+.button-link:hover,
+.button-link:focus {
+    background: var(--color-brand-blue-soft);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    outline: none;
+}
+
+.button-link:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
 }
 
 .secondary-button {
     background: #7c3aed;
 }
 
-.secondary-button:hover {
-    opacity: 0.95;
+.secondary-button:hover,
+.secondary-button:focus {
+    background: #6d28d9;
+    outline: none;
 }
 
 /*
@@ -104,12 +141,19 @@ Used for less prominent actions such as manual address entry.
 .btn-linkish {
     background: none;
     border: none;
-    color: #3b82f6;
+    color: var(--color-primary);
     padding: 0;
     cursor: pointer;
     font-weight: 600;
     text-align: left;
     font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.btn-linkish:hover,
+.btn-linkish:focus {
+    color: var(--color-brand-blue-soft);
+    outline: none;
 }
 
 /*
@@ -124,16 +168,19 @@ Used in filter rows and table utility actions.
     width: 100%;
     padding: 0.75rem 1rem;
     border: none;
-    border-radius: 10px;
-    background: #374151;
-    color: white;
+    border-radius: var(--radius-md);
+    background: #334155;
+    color: #ffffff;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.table-filter-button:hover {
+.table-filter-button:hover,
+.table-filter-button:focus {
     background: #1f2937;
+    transform: translateY(-1px);
+    outline: none;
 }
 
 .table-filter-button:disabled,
@@ -141,6 +188,7 @@ Used in filter rows and table utility actions.
     background: #9ca3af;
     cursor: not-allowed;
     opacity: 0.7;
+    transform: none;
 }
 
 /*
@@ -153,11 +201,13 @@ across registration and agreement workflows.
 */
 
 .agreement-button {
-    background: #2563eb;
+    background: var(--color-primary);
 }
 
-.agreement-button:hover {
-    opacity: 0.95;
+.agreement-button:hover,
+.agreement-button:focus {
+    background: var(--color-brand-blue-soft);
+    outline: none;
 }
 
 .register-submit-btn {

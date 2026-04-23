@@ -15,24 +15,55 @@ Used where filter buttons appear outside table rows.
 -----------------------------------------------------------
 */
 
+.filter-button-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 .filter-button-group button {
-    padding: 0.8rem 1.2rem;
-    border-radius: 10px;
-    border: none;
-    background: #374151;
-    color: white;
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.filter-button-group button:hover {
-    background: #1f2937;
+.filter-button-group button:hover,
+.filter-button-group button:focus {
+    background: var(--color-border-subtle);
+    border-color: var(--color-primary);
+    outline: none;
 }
+
+/*
+-----------------------------------------------------------
+Active filter state
+-----------------------------------------------------------
+Gives a subtle but clear indication of selected filters.
+-----------------------------------------------------------
+*/
+
+.filter-button-group button.active {
+    background: rgba(127, 170, 207, 0.15);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/*
+-----------------------------------------------------------
+Disabled state
+-----------------------------------------------------------
+*/
 
 .filter-button-group button:disabled,
 .button-disabled {
-    background: #9ca3af;
+    background: var(--color-border-subtle);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
     cursor: not-allowed;
     opacity: 0.7;
 }
@@ -46,25 +77,33 @@ Used in record tables that provide inline filter controls.
 */
 
 .filter-row th {
-    background: #ffffff;
+    background: var(--color-bg-card);
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
 }
+
+/*
+-----------------------------------------------------------
+Filter inputs and selects
+-----------------------------------------------------------
+*/
 
 .filter-row input,
 .filter-row select {
     width: 100%;
     padding: 0.65rem 0.8rem;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
     font-size: 0.9rem;
     box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .filter-row input:focus,
 .filter-row select:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(127, 170, 207, 0.18);
 }

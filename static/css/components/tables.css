@@ -18,9 +18,10 @@ without breaking card-based layouts.
 
 .table-wrapper {
     overflow-x: auto;
-    background: white;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
 }
 
 /*
@@ -35,23 +36,34 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin: 0;
+    background: transparent;
 }
 
 th,
 td {
     padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
     text-align: left;
+    vertical-align: middle;
 }
 
 th {
-    background: #f9fafb;
+    background: var(--color-border-subtle);
     font-size: 0.9rem;
-    color: #374151;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+td {
+    color: var(--color-text-primary);
 }
 
 tbody tr:hover {
-    background: #f9fafb;
+    background: var(--color-border-subtle);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
 }
 
 td:last-child {
@@ -67,13 +79,17 @@ Used for edit/view links inside table rows.
 */
 
 .table-action {
-    color: #2563eb;
+    color: var(--color-primary);
     text-decoration: none;
     font-weight: 600;
+    transition: color 0.2s ease;
 }
 
-.table-action:hover {
+.table-action:hover,
+.table-action:focus {
+    color: var(--color-brand-blue-soft);
     text-decoration: underline;
+    outline: none;
 }
 
 /*
@@ -108,14 +124,41 @@ Used for reviewer selection and similar workflow actions.
 .table-select {
     min-width: 260px;
     padding: 0.75rem 0.9rem;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
     font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .table-select:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(127, 170, 207, 0.18);
+}
+
+/*
+-----------------------------------------------------------
+Responsive table spacing
+-----------------------------------------------------------
+Keeps dense tables usable on smaller screens.
+-----------------------------------------------------------
+*/
+
+@media (max-width: 700px) {
+    th,
+    td {
+        padding: 0.85rem 0.75rem;
+        font-size: 0.92rem;
+    }
+
+    .table-select {
+        min-width: 100%;
+    }
+
+    .submit-controls {
+        width: 100%;
+        align-items: stretch;
+    }
 }
